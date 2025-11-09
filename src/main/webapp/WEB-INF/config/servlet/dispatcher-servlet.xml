@@ -34,7 +34,7 @@
 	</mvc:annotation-driven>
 	
 	
-	<!-- 5. Controller 스캔   -->
+	<!-- 5. Controller 스캔    -->
 	<context:component-scan base-package="com.all4land.board.controller"/>
 	
 	
