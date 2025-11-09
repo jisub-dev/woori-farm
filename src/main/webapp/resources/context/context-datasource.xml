@@ -24,7 +24,7 @@
 			</property>
 		</bean>
 		
-		<!-- 트랜잭션 매니저 -->
+		<!-- 트랜잭션 매니저  -->
 		<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		    <property name="dataSource" ref="dataSource" />
 		</bean>
