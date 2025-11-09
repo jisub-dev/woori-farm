@@ -35,7 +35,7 @@
 	
 	
 	<!-- 5. Controller 스캔   -->
-	<context:component-scan base-package="com.all4land.board.controller"/>
+	<context:component-scan base-package="com.woori.wooribat.controller"/>
 	
 	
 	
