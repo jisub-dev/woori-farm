@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+	xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd"
+	xmlns:mvc="http://www.springframework.org/schema/mvc">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing 
+		infrastructure -->
+
+
+	<!-- 1. 정적 리소스 -->
+	<resources mapping="/resources/**" location="/resources/" />
+
+	<!-- 2. JSP 뷰  -->
+	<beans:bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+
+
+	<!-- 3. Properties 로드  -->
+	<context:property-placeholder location="classpath:fileupload.properties" ignore-unresolvable="true" /> <!--  경로에 없어도 일단 실행, 설정 파일 스캔-->
+		
+
+	<!-- 4. MVC 활성화  -->
+	<mvc:annotation-driven>
+	  <mvc:path-matching suffix-pattern="true"/>
+	</mvc:annotation-driven>
+	
+	
+	<!-- 5. Controller 스캔   -->
+	<context:component-scan base-package="com.all4land.board.controller"/>
+	
+	
+	
+	<!--빈 이름은 무조건  multipartResolver -->
+	<!-- 파일 업로드 시 사용  -->
+ 	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver"></beans:bean>
+	
+	<!-- FIXME: 파일 업로드 설정 (추후 수정)  -->
+	<context:property-placeholder location="classpath:fileupload.properties" ignore-unresolvable="true" /> <!--  경로에 없어도 일단 실행, 설정 파일 스캔-->
+	
+	
+
+</beans:beans>
