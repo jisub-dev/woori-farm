@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+.baseMap {
+	height: 600px;
+}
+
+.btnBaseMaps {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+}
+
+.checkChAddCada {
+	position: absolute;
+	right: 10px;
+	top: 60px;
+}
+
+.checkChAddHover {
+	position: absolute;
+	right: 10px;
+	top: 80px;
+}
+
+.ol-popup {
+	background:#fff;
+	border:1px solid #ddd;
+	border-radius:6px;
+	padding:8px 10px;
+	font:13px sans-serif;
+}
+
+#map-popup .popup-closer button{
+  	background:#fff;
+	border:1px solid #ddd;
+	border-radius:6px;
+	padding:8px 20px;
+	font:13px sans-serif;
+}
+
+#map-popup .popup-closer {
+	display: flex;
+  	justify-content: center;	
+}
+
+

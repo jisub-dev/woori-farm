@@ -24,17 +24,13 @@
 	</beans:bean>
 
 
-	<!-- 3. Properties 로드  -->
-	<context:property-placeholder location="classpath:fileupload.properties" ignore-unresolvable="true" /> <!--  경로에 없어도 일단 실행, 설정 파일 스캔-->
-		
-
-	<!-- 4. MVC 활성화  -->
+	<!-- 3. MVC 활성화  -->
 	<mvc:annotation-driven>
 	  <mvc:path-matching suffix-pattern="true"/>
 	</mvc:annotation-driven>
 	
 	
-	<!-- 5. Controller 스캔   -->
+	<!-- 4. Controller 스캔   -->
 	<context:component-scan base-package="com.woori.wooribat.controller"/>
 	
 	
@@ -44,7 +40,7 @@
  	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver"></beans:bean>
 	
 	<!-- FIXME: 파일 업로드 설정 (추후 수정)  -->
-	<context:property-placeholder location="classpath:fileupload.properties" ignore-unresolvable="true" /> <!--  경로에 없어도 일단 실행, 설정 파일 스캔-->
+	<!-- <context:property-placeholder location="classpath:fileupload.properties" ignore-unresolvable="true" /> --> <!--  경로에 없어도 일단 실행, 설정 파일 스캔-->
 	
 	
 
