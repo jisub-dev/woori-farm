@@ -277,10 +277,10 @@ function initMap() {
 
 		/*setTimeout(function() { //맵 다 그리고 2000ms 뒤에 버튼 추가 
 			
+			// 브이월드 new vw.ol3.control.Toolbar를 사용하면
 			// <div id="vw-collapsible" style="position: absolute; z-index: 100; inset: 0px;">
 			// 위 요소가 화면을 다 덮어서 컨트롤이 먹통이 됨  -> 개별 버튼 구현하기로 결정 
 			
-			console.log("rendercomplete 이벤트 발생"); 
 			
 			var toolbar = new vw.ol3.control.Toolbar({
 				map: baseMap,
