@@ -8,14 +8,17 @@
 <title>baseMapSample</title>
 	<!-- c:url 하면 context 로 반영됨 -->
 	<!--  절대 경로로 설정  -->
-	<script type="text/javascript" src="https://map.vworld.kr/js/vworldMapInit.js.do?version=2.0&apiKey=8E952DFB-FFDE-33E3-BA8A-3D78FF78B6CC&domain=http://localhost:8080/"></script>
+	
+	<script type="text/javascript" src="<c:url value='/resources/js/ol/dist/ol.js'/>"></script>
+	<script type="text/javascript" src="<c:url value='/resources/js/jquery-3.1.1.min.js'/>"></script>
 	<script src="<c:url value='/resources/js/map/mainMap.js'/>"></script>
 	<link rel="stylesheet" href="<c:url value='/resources/js/style/mapStyle.css'/>">
+  	<link rel="stylesheet" href="<c:url value='/resources/js/ol/ol.css'/>">
   	
   </head>
 <body>
 	<!-- 지도  -->
-	<div id="baseMap" class="baseMap"></div>
+	<div id="map" class="map"></div>
 	
 	<!--  baseMap 변환 버튼  --> 
 	<div id="btnBaseMaps" class="btnBaseMaps">
@@ -25,20 +28,25 @@
 	</div>	
 	
 	<div id="checkChAddCada" class="checkChAddCada">
-		<input type="checkbox" id="chAddCada" class="chAddCada">지적편집도 (클릭이벤트 포함)
+		<input type="checkbox" id="chAddCada" class="chAddCada">지적편집도
 	</div>
 	<div id="checkChAddHover" class="checkChAddHover">
 		<input type="checkbox" id="chAddHover" class="chAddHover">마우스 호버 지적편집도 
 	</div>
-	
-	
-	
+
+	<div id="measurementType" class="measurementType">
+	    <input type="checkbox" id="chLength">거리
+	    <br>
+   	    <input type="checkbox" id="chArea">면적
+	</div>
+
+
 	<!-- 팝업을 사용할 DOM  -->
 	<div id="map-popup" class="ol-popup">
 	  <div id="popup-content"></div>
 	</div>
 	
-	
+
 	
 	
 
