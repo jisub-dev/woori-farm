@@ -22,22 +22,34 @@
 	
 	<!--  baseMap 변환 버튼  --> 
 	<div id="btnBaseMaps" class="btnBaseMaps">
-	    <button id="btn_gra" disabled>일반지도</button>
+	    <button id="btn_gra" style="font-weight: bold; color: #000000; -webkit-text-stroke: 1px #999999;" disabled>일반지도</button>
 	   	<br>
-	    <button id="btn_pho">위성지도</button>
-	</div>	
-	
-	<div id="checkChAddCada" class="checkChAddCada">
-		<input type="checkbox" id="chAddCada" class="chAddCada">지적편집도
+	    <button id="btn_pho" style="font-weight: bold; color: #000000; -webkit-text-stroke: 1px #999999;">위성지도</button>
 	</div>
+
+	<div id="checkChAddCada" class="checkChAddCada">
+		<label
+			style="font-weight: bold; color: #000000; -webkit-text-stroke: 1px #999999;">
+			<input type="checkbox" id="chAddCada" class="chAddCada">지적편집도
+		</label>
+	</div>
+
 	<div id="checkChAddHover" class="checkChAddHover">
-		<input type="checkbox" id="chAddHover" class="chAddHover">마우스 호버 지적편집도 
+		<label
+			style="font-weight: bold; color: #000000; -webkit-text-stroke: 1px #999999;">
+			<input type="checkbox" id="chAddHover" class="chAddHover">마우스
+			호버 지적편집도
+		</label>
 	</div>
 
 	<div id="measurementType" class="measurementType">
-	    <input type="checkbox" id="chLength">거리
-	    <br>
-   	    <input type="checkbox" id="chArea">면적
+		<label
+			style="font-weight: bold; color: #000000; -webkit-text-stroke: 1px #999999;">
+			<input type="checkbox" id="chLength">거리
+		</label> <br> <label
+			style="font-weight: bold; color: #000000; -webkit-text-stroke: 1px #999999;">
+			<input type="checkbox" id="chArea">면적
+		</label>
 	</div>
 
 

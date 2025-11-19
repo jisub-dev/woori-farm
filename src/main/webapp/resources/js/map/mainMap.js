@@ -203,8 +203,8 @@ function initMap() {
 			hybridLayer
 		],
 		view: new ol.View({
-			center: ol.proj.fromLonLat([127.5, 37.5]), // 대한민국 중심 좌표
-			zoom: 14,
+			center: ol.proj.fromLonLat([126.65, 35.97]), // 군산 좌표
+			zoom: 16,
 			projection: 'EPSG:3857'
 		})
 	});
@@ -227,7 +227,7 @@ function initMap() {
 			hintEl.style.display = 'none'; // 무조건 숨김
 			return;
 		}
-		const z = map.getView().getZoom();
+		const z = Math.round(map.getView().getZoom());
 		hintEl.innerHTML = `지적 조회는 <b>줌 레벨 17 이상</b>에서 가능합니다.<br>현재 줌 레벨: ${z}`;
 		if (z >= 17) hintEl.style.display = 'none';
 		else hintEl.style.display = 'block';
@@ -426,10 +426,11 @@ function initMap() {
 		const formatArea = function (polygon) {
 		  const area = ol.sphere.getArea(polygon);
 		  let output;
+		  let mSquare = Math.round(area * 100) / 100; 
 		  if (area > 10000) {
-		    output = Math.round((area / 1000000) * 100) / 100 + ' ' + 'km<sup>2</sup>';
+		    output = Math.round((area / 1000000) * 100) / 100 + ' ' + 'km<sup>2</sup>' + ' (' + Math.round(mSquare / 3.30579) + '평)';
 		  } else {
-		    output = Math.round(area * 100) / 100 + ' ' + 'm<sup>2</sup>';
+		    output = mSquare + ' ' + 'm<sup>2</sup>' + ' (' + Math.round(mSquare / 3.30579) + '평)';
 		  }
 		  return output;
 		};

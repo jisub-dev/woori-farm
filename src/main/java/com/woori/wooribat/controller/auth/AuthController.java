@@ -11,7 +11,7 @@ import com.woori.wooribat.model.dto.auth.SignupRequestDto;
 public class AuthController {
 	
 	@Autowired
-	private AuthServiceImpl authService;
+	//private AuthServiceImpl authService;
 	
 	@GetMapping("/login.do")
 	public String login() {

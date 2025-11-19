@@ -8,8 +8,8 @@ import com.woori.wooribat.service.auth.AuthService;
 @Service
 public class AuthServiceImpl {
 	
-	@Override
-	public void signup(SignupRequestDto signupRequestDto) {
-		mapper.signup(signupRequestDto);
-	}
+//	@Override
+//	public void signup(SignupRequestDto signupRequestDto) {
+//		mapper.signup(signupRequestDto);
+//	}
 }
