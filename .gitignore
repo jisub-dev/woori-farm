@@ -5,3 +5,4 @@ target/
 .factorypath
 *.class
 .DS_Store
+.properties
