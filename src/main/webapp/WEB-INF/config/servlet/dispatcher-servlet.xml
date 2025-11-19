@@ -32,9 +32,24 @@
 	
 	<!-- 4. Controller 스캔   -->
 	<context:component-scan base-package="com.woori.wooribat.controller"/>
-	
-	
-	
+
+
+	<!-- 5. 인터셉터 설정 (로그인 체크) -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<!-- 모든 경로에 대해 인터셉터 적용 -->
+			<mvc:mapping path="/**"/>
+			<!-- 로그인 관련 경로는 제외 -->
+			<mvc:exclude-mapping path="/login.do"/>
+			<mvc:exclude-mapping path="/oauth2/google.do"/>
+			<mvc:exclude-mapping path="/oauth2callback.do"/>
+			<!-- 정적 리소스 제외 -->
+			<mvc:exclude-mapping path="/resources/**"/>
+			<beans:bean class="com.woori.wooribat.cmm.interceptor.AuthInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+
 	<!--빈 이름은 무조건  multipartResolver -->
 	<!-- 파일 업로드 시 사용  -->
  	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver"></beans:bean>

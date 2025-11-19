@@ -1,25 +1,237 @@
 @charset "UTF-8";
 
+/* 전체 레이아웃 */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	overflow: hidden;
+}
+
+/* 상단 헤더 */
+.map-header {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 60px;
+	background: white;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 20px;
+	z-index: 1000;
+	flex-direction: column;
+
+	
+}
+
+.header-left .logo {
+	font-size: 20px;
+	font-weight: 700;
+	color: #333;
+	margin: 0;
+}
+
+.header-right {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+}
+
+.user-info {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.user-avatar {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	border: 2px solid #ddd;
+}
+
+.user-name {
+	font-weight: 600;
+	color: #333;
+}
+
+.user-email {
+	color: #666;
+	font-size: 14px;
+}
+
+.logout-btn {
+	padding: 8px 16px;
+	background: #03C75A;
+	color: white;
+	text-decoration: none;
+	border-radius: 6px;
+	font-size: 14px;
+	font-weight: 500;
+	transition: background 0.3s;
+}
+
+.logout-btn:hover {
+	background: #02b350;
+}
+
+/* 지도 */
 .map {
-	height: 600px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100vh;
 }
 
-.btnBaseMaps {
+/* 왼쪽 메뉴 */
+.side-menu-left {
 	position: absolute;
-	right: 10px;
-	top: 10px;
+	top: 70px;
+	left: 10px;
+	width: 220px;
+	background: white;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+	z-index: 100;
+	overflow: hidden;
 }
 
-.checkChAddCada {
-	position: absolute;
-	right: 10px;
-	top: 60px;
+.side-menu-left .menu-header {
+	background: #03C75A;
+	color: white;
+	padding: 12px 15px;
+	font-weight: 600;
 }
 
-.checkChAddHover {
+.side-menu-left .menu-header h3 {
+	margin: 0;
+	font-size: 15px;
+}
+
+.side-menu-left .menu-content {
+	padding: 5px 0;
+}
+
+.side-menu-left .menu-item {
+	padding: 0;
+}
+
+.side-menu-left .menu-link {
+	display: block;
+	padding: 13px 15px;
+	color: #333;
+	text-decoration: none;
+	transition: all 0.2s;
+	font-size: 14px;
+	border-bottom: 1px solid #f5f5f5;
+}
+
+.side-menu-left .menu-link:hover {
+	background: #f8f9fa;
+	color: #03C75A;
+}
+
+/* 오른쪽 도구 패널 */
+.tool-panel-right {
 	position: absolute;
+	top: 70px;
 	right: 10px;
-	top: 80px;
+	width: 200px;
+	background: white;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+	z-index: 100;
+	padding: 12px;
+	max-height: calc(100vh - 80px);
+	overflow-y: auto;
+}
+
+.tool-section {
+	margin-bottom: 15px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.tool-section:last-child {
+	border-bottom: none;
+	margin-bottom: 0;
+}
+
+.tool-section h4 {
+	margin: 0 0 8px 0;
+	font-size: 13px;
+	color: #999;
+	font-weight: 500;
+}
+
+.tool-buttons {
+	display: flex;
+	gap: 6px;
+}
+
+.tool-btn {
+	flex: 1;
+	padding: 7px 10px;
+	border: 1px solid #e0e0e0;
+	background: white;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 12px;
+	transition: all 0.2s;
+	color: #666;
+}
+
+.tool-btn:hover {
+	background: #f8f9fa;
+	border-color: #ccc;
+}
+
+.tool-btn.active {
+	background: #03C75A;
+	color: white;
+	border-color: #03C75A;
+	font-weight: 500;
+}
+
+.tool-item {
+	padding: 6px 0;
+}
+
+.tool-item label {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	font-size: 13px;
+	color: #333;
+}
+
+.tool-item input[type="checkbox"] {
+	margin-right: 8px;
+	cursor: pointer;
+	width: 16px;
+	height: 16px;
+}
+
+.tool-item span {
+	user-select: none;
+}
+
+/* 기존 요소 숨김 */
+.btnBaseMaps,
+.checkChAddCada,
+.checkChAddHover,
+.measurementType {
+	display: none;
 }
 
 .ol-popup {

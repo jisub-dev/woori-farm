@@ -3,9 +3,14 @@
 <mapper namespace="com.woori.wooribat.mapper.auth.AuthMapper">
 
 	<insert id="signup" parameterType="com.woori.wooribat.model.dto.auth.SignupRequestDto">
-	
-	
+		INSERT INTO farm.users (email, password, name)
+		VALUES (#{email}, #{password}, #{name})
 	</insert>
+	
+	<select id="login" parameterType="com.woori.wooribat.model.dto.auth.LoginRequestDto">
+		SELECT email, password
+		FROM farm.users
+	</select>
 
 
 </mapper>

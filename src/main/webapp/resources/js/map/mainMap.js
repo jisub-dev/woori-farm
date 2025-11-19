@@ -56,7 +56,46 @@ const continueLineMsg = '클릭하여 라인을 그리기(더블클릭으로 멈
 
 $(document).ready(function() {
 	initMap();
+	initNavigation();
 })
+
+// 네비게이션 메뉴 초기화
+function initNavigation() {
+	const panelLayout = document.querySelector('.panel-layout');
+	const navItems = document.querySelectorAll('.nav-item');
+
+	console.log('패널:', panelLayout);
+	console.log('메뉴 개수:', navItems.length);
+
+	// 페이지 로드 시 패널 숨기기 (지도 홈이 기본 활성화)
+	if (panelLayout) {
+		panelLayout.style.display = 'none';
+		console.log('초기 패널 숨김');
+	}
+
+	navItems.forEach((item, index) => {
+		const link = item.querySelector('.nav-link');
+		link.addEventListener('click', (e) => {
+			e.preventDefault();
+			console.log('메뉴 클릭:', index);
+
+			// 모든 메뉴에서 active 제거
+			navItems.forEach(nav => nav.classList.remove('active'));
+
+			// 클릭한 메뉴에 active 추가
+			item.classList.add('active');
+
+			// 첫 번째 메뉴(지도 홈)일 때 패널 숨김, 나머지는 보임
+			if (index === 0) {
+				panelLayout.style.display = 'none';
+				console.log('패널 숨김');
+			} else {
+				panelLayout.style.display = 'block';
+				console.log('패널 표시');
+			}
+		});
+	});
+}
 
 
 
@@ -94,7 +133,8 @@ function initMap() {
 		hybridLayer.setVisible(false);
 		switchMapGra.disabled = true;
 		switchMapPho.disabled = false;
-
+		switchMapGra.classList.add("active");
+		switchMapPho.classList.remove("active");
 	});
 	// 위성지도 선택시
 	const switchMapPho = document.getElementById("btn_pho");
@@ -104,15 +144,19 @@ function initMap() {
 		hybridLayer.setVisible(true);
 		switchMapPho.disabled = true;
 		switchMapGra.disabled = false;
+		switchMapGra.classList.remove("active");
+		switchMapPho.classList.add("active");
 	});
 	
 	// 지적편집도 WFS, 클릭 이벤트 On/Off
 	const addCadstreLayer = document.getElementById("chAddCada");
-	addCadstreLayer.addEventListener("change", () => {
-		cadWfsClick = addCadstreLayer.checked;
+	addCadstreLayer.addEventListener("click", () => {
+		cadWfsClick = !cadWfsClick; // 토글
+		addCadstreLayer.setAttribute('aria-pressed', cadWfsClick);
+
 		if (cadWfsClick) {
 		    // ON
-		    refreshHint(); // 줌 레벨 확인 후 안내문 
+		    refreshHint(); // 줌 레벨 확인 후 안내문
 		    selectCadastreFeatLayer.getSource().clear();
 		    cadastreLayer.setVisible(true);
 		    selectCadastreFeatLayer.setVisible(true);
@@ -123,20 +167,20 @@ function initMap() {
 		    selectCadastreFeatLayer.setVisible(false);
 		    if (overlay) overlay.setPosition(undefined); // 팝업 닫기
 		  }
-	
 	})
-	
-	// 마우수 오버 이벤트 on/off 
+
+	// 마우스 오버 이벤트 on/off
 	const mousehovermode = document.getElementById("chAddHover");
-	mousehovermode.addEventListener("change", () => {
-		hoverOn = mousehovermode.checked;
+	mousehovermode.addEventListener("click", () => {
+		hoverOn = !hoverOn; // 토글
+		mousehovermode.setAttribute('aria-pressed', hoverOn);
+
 		if (!hoverOn) {
-		    cadastreFeatLayer.getSource().clear(); // 이전에 띄운 레이어 지우기 
+		    cadastreFeatLayer.getSource().clear(); // 이전에 띄운 레이어 지우기
 		    cadastreFeatLayer.setVisible(false);
 		  } else {
 		    cadastreFeatLayer.setVisible(true);
 		  }
-	
 	})
 	
 	const highlightStyle = new ol.style.Style({
@@ -164,16 +208,21 @@ function initMap() {
 		},
 	});
 
-	// 거리 재기 기능 
+	// 거리 재기 기능
 	const pointerMoveHandler = function(evt) {
-		if (!(drawLine || drawPoly)) { // 거리재기 기능 선택안하면  못그림 
+		if (!(drawLine || drawPoly)) { // 거리재기 기능 선택안하면  못그림
 			return;
 		}
-		if (evt.dragging) { // 드래그 중이면 무시 
+		if (evt.dragging) { // 드래그 중이면 무시
 			return;
 		}
 
-		let helpMsg = '클릭하여 그리기'; // 기본 안내 메시지 	
+		// helpTooltipElement가 생성되지 않았으면 실행하지 않음
+		if (!helpTooltipElement || !helpTooltip) {
+			return;
+		}
+
+		let helpMsg = '클릭하여 그리기'; // 기본 안내 메시지
 
 		if (sketch) {
 			const geom = sketch.getGeometry();
@@ -397,7 +446,9 @@ function initMap() {
 		map.on('pointermove', pointerMoveHandler);
 
 		map.getViewport().addEventListener('mouseout', function () {
-		  helpTooltipElement.classList.add('hidden');
+		  if (helpTooltipElement) {
+		    helpTooltipElement.classList.add('hidden');
+		  }
 		});
 	
 		
@@ -456,26 +507,30 @@ function initMap() {
 		});
 
 		
-	// 거리, 면적 재기 타입 선택 	
+	// 거리, 면적 재기 타입 선택
 	const chLength = document.getElementById('chLength');
 	const chArea = document.getElementById('chArea');
 
 	let draw; // global so we can remove it later
 
-	
-	// 거리 재기 체크시 
-	chLength.addEventListener('change', () => {
-		if (chLength.checked) {
-			chArea.checked = false; // 면적 해제
-			drawLine = true;
+
+	// 거리 재기 버튼 클릭시
+	chLength.addEventListener('click', () => {
+		drawLine = !drawLine; // 토글
+		chLength.setAttribute('aria-pressed', drawLine);
+
+		if (drawLine) {
+			// 면적 재기 해제
 			drawPoly = false;
-			// 이전에 있던 그리는 도구 지우기 
+			chArea.setAttribute('aria-pressed', false);
+
+			// 이전에 있던 그리는 도구 지우기
 			if (draw) map.removeInteraction(draw);
-			
+
 			// 거리 재기 시작
 			addInteraction('LineString');
 		} else {
-			// 이전에 있던 그리는 도구 지우기 
+			// 이전에 있던 그리는 도구 지우기
 			if (draw) map.removeInteraction(draw);
 			// 마우스 옆 툴팁헬퍼 지우기
 			if (helpTooltipElement) {
@@ -484,19 +539,23 @@ function initMap() {
 		}
 	});
 
-	// 면적 재기 체크시 
-	chArea.addEventListener('change', () => {
-		if (chArea.checked) {
-			chLength.checked = false; // 거리 해제
+	// 면적 재기 버튼 클릭시
+	chArea.addEventListener('click', () => {
+		drawPoly = !drawPoly; // 토글
+		chArea.setAttribute('aria-pressed', drawPoly);
+
+		if (drawPoly) {
+			// 거리 재기 해제
 			drawLine = false;
-			drawPoly = true;
-			// 이전에 있던 그리는 도구 지우기 
+			chLength.setAttribute('aria-pressed', false);
+
+			// 이전에 있던 그리는 도구 지우기
 			if (draw) map.removeInteraction(draw);
-			
+
 			// 면적 재기 시작
 			addInteraction('Polygon');
 		} else {
-			// 이전에 있던 그리는 도구 지우기 
+			// 이전에 있던 그리는 도구 지우기
 			if (draw) map.removeInteraction(draw);
 			// 마우스 옆 툴팁헬퍼 지우기
 			if (helpTooltipElement) {
