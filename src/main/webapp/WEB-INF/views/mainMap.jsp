@@ -217,7 +217,7 @@
 					</div>
 
 					<!-- 공유 & 출력 -->
-					<div class="widget-group export-widget">
+					<!-- <div class="widget-group export-widget">
 						<button class="widget-button widget-print">
 							<i class="mdi mdi-printer"></i>
 							<span class="blind">인쇄</span>
@@ -227,6 +227,7 @@
 							<span class="blind">공유하기</span>
 						</button>
 					</div>
+					 -->
 				</div>
 
 				<!-- 위치 & 줌 컨트롤 -->

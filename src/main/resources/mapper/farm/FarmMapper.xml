@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.woori.wooribat.mapper.auth.AuthMapper">
+
+	<select id="getFarmFolder" parameterType="Integer" 
+	resultType="com.woori.wooribat.model.dto.farm.FarmFoldersResponseDto">
+		SELECT id, user_id AS userId, name, description, created_at AS createdAt, updated_at AS updatedAt
+		FROM farm.farm_folders
+		WHERE user_id = #{id} , del_yn='N'
+	</select>
+	
+	<insert id="insertFarm" parameterType="com.woori.wooribat.model.dto.farm.FarmDto">
+		INSERT INTO farm.farms
+		VALUES (id, #{userId}, #{folderId}, #{name}, #{pnu}, #{address}, #{centerPoint}, #{area}, #{currentStatus}, #{meno}, #{createdAt}, #{updatedAt}, 'N')
+	</insert>
+	
+	<update id="updateFarm" parameterType="com.woori.wooribat.model.dto.farm.FarmDto">
+		UPDATE farm.farms 
+		SET user_id = #{userId}, 
+			folder_id = #{folderId}, 
+			name = #{name}, 
+			pnu = #{pnu}, 
+			address = #{address}, 
+			centerPoint = #{centerPoint}, 
+			area = #{area}, 
+			current_status = #{currentStatus}, 
+			memo = #{meno}, 
+			updated_at =  #{updatedAt},
+			del_yn = #{delYn}
+		WHERE id = #{id}
+	</update>
+
+
+</mapper>

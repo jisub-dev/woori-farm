@@ -6,9 +6,9 @@ import lombok.Data;
 
 @Data
 public class UserDto {
-	Integer id;
-	String email;
-	String name;
-	LocalDateTime createdAt;
-	LocalDateTime updatedAt;
+	private Integer id;
+	private String email;
+	private String name;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
 }
