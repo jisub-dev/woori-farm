@@ -1,25 +1,23 @@
 package com.woori.wooribat.model.dto.farm;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
+import lombok.Data;
 
-import io.opencensus.metrics.export.Point;
-
+@Data
 public class FarmDto {
-	private long id;
-	private long user_id;
-	private long folder_id;
+	private Integer id;
+	private Integer userId;
+	private Integer folderId;
 	private String name;
 	private String pnu;
 	private String address;
-	
-	@Column(columnDefinition = "geometry(Point, 3857")
-	private Point centerPoint;
-	
-	private long area;
+	private String centerPoint; // PostGIS geometry를 WKT 문자열로 처리
+	private BigDecimal area;
 	private String currentStatus;
 	private String memo;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
+	private String delYn;
 }

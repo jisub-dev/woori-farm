@@ -31,7 +31,7 @@
 	<!-- Header -->
 	<header id="header" class="map-header">
 		<h1 class="logo">
-			<a href="<c:url value='/mainMap.do'/>">
+			<a href="<c:url value='/gis.do'/>">
 				<span class="logo-icon">🌾</span>
 				<span class="logo-text">우리밭</span>
 			</a>

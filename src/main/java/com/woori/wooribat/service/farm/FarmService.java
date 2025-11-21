@@ -1,14 +1,24 @@
 package com.woori.wooribat.service.farm;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import java.util.List;
 
-import com.woori.wooribat.mapper.farm.FarmMapper;
+import com.woori.wooribat.model.dto.farm.FarmDto;
 import com.woori.wooribat.model.dto.farm.FarmFolderDto;
-import com.woori.wooribat.model.dto.user.UserDto;
 
-@Service
 public interface FarmService {
-	
-	public FarmFolderDto getFarmList(UserDto userDto);
+
+	// Farm Folder CRUD
+	List<FarmFolderDto> getFarmFolders(Integer userId);
+	FarmFolderDto getFarmFolderById(Integer id);
+	int createFarmFolder(FarmFolderDto farmFolderDto);
+	int updateFarmFolder(FarmFolderDto farmFolderDto);
+	int deleteFarmFolder(Integer id);
+
+	// Farm CRUD
+	List<FarmDto> getFarmsByUserId(Integer userId);
+	List<FarmDto> getFarmsByFolderId(Integer folderId);
+	FarmDto getFarmById(Integer id);
+	int createFarm(FarmDto farmDto);
+	int updateFarm(FarmDto farmDto);
+	int deleteFarm(Integer id);
 }
