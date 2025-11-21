@@ -57,10 +57,12 @@ public class AuthController {
 			JsonNode userInfo = googleUserService.getUserInfo(accessToken);
 
 			// 3. 사용자 정보 세션에 저장
+			String userId = userInfo.get("id").asText();
 			String email = userInfo.get("email").asText();
 			String name = userInfo.get("name").asText();
 			String picture = userInfo.has("picture") ? userInfo.get("picture").asText() : null;
 
+			session.setAttribute("userId", userId);
 			session.setAttribute("userEmail", email);
 			session.setAttribute("userName", name);
 			session.setAttribute("userPicture", picture);

@@ -190,10 +190,6 @@
 				<div class="item-toolbox">
 					<!-- 레이어 위젯 -->
 					<div class="widget-group layer-widget">
-						<button class="widget-button widget-favorite" aria-pressed="false">
-							<i class="mdi mdi-star"></i>
-							<span class="blind">저장</span>
-						</button>
 						<button class="widget-button widget-land" id="chAddCada" aria-pressed="false">
 							<i class="mdi mdi-map-marker-outline"></i>
 							<span class="blind">지적편집도</span>

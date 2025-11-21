@@ -3,7 +3,7 @@
 <mapper namespace="com.woori.wooribat.mapper.farm.FarmMapper">
 
 	<!-- Farm Folder CRUD -->
-	<select id="getFarmFolders" parameterType="Integer" resultType="com.woori.wooribat.model.dto.farm.FarmFolderDto">
+	<select id="getFarmFolders" parameterType="String" resultType="com.woori.wooribat.model.dto.farm.FarmFolderDto">
 		SELECT
 			id,
 			user_id AS userId,
@@ -29,8 +29,8 @@
 	</select>
 
 	<insert id="insertFarmFolder" parameterType="com.woori.wooribat.model.dto.farm.FarmFolderDto" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO farm.farm_folders (user_id, name, description, created_at, updated_at)
-		VALUES (#{userId}, #{name}, #{description}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+		INSERT INTO farm.farm_folders (user_id, name, description, created_at, updated_at, del_yn)
+		VALUES (#{userId}, #{name}, #{description}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'N')
 	</insert>
 
 	<update id="updateFarmFolder" parameterType="com.woori.wooribat.model.dto.farm.FarmFolderDto">
@@ -48,7 +48,7 @@
 	</delete>
 
 	<!-- Farm CRUD -->
-	<select id="getFarmsByUserId" parameterType="Integer" resultType="com.woori.wooribat.model.dto.farm.FarmDto">
+	<select id="getFarmsByUserId" parameterType="String" resultType="com.woori.wooribat.model.dto.farm.FarmDto">
 		SELECT
 			id,
 			user_id AS userId,
@@ -88,55 +88,6 @@
 		ORDER BY created_at DESC
 	</select>
 
-	<select id="getFarmById" parameterType="Integer" resultType="com.woori.wooribat.model.dto.farm.FarmDto">
-		SELECT
-			id,
-			user_id AS userId,
-			folder_id AS folderId,
-			name,
-			pnu,
-			address,
-			ST_AsText(center_point) AS centerPoint,
-			area,
-			current_status AS currentStatus,
-			memo,
-			created_at AS createdAt,
-			updated_at AS updatedAt,
-			del_yn AS delYn
-		FROM farm.farms
-		WHERE id = #{id}
-	</select>
-
-	<insert id="insertFarm" parameterType="com.woori.wooribat.model.dto.farm.FarmDto" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO farm.farms
-			(user_id, folder_id, name, pnu, address, center_point, area, current_status, memo, created_at, updated_at, del_yn)
-		VALUES
-			(#{userId}, #{folderId}, #{name}, #{pnu}, #{address},
-			 ST_GeomFromText(#{centerPoint}, 4326), #{area}, #{currentStatus}, #{memo},
-			 CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'N')
-	</insert>
-
-	<update id="updateFarm" parameterType="com.woori.wooribat.model.dto.farm.FarmDto">
-		UPDATE farm.farms
-		SET
-			folder_id = #{folderId},
-			name = #{name},
-			pnu = #{pnu},
-			address = #{address},
-			center_point = ST_GeomFromText(#{centerPoint}, 4326),
-			area = #{area},
-			current_status = #{currentStatus},
-			memo = #{memo},
-			updated_at = CURRENT_TIMESTAMP
-		WHERE id = #{id}
-	</update>
-
-	<update id="deleteFarm" parameterType="Integer">
-		UPDATE farm.farms
-		SET
-			del_yn = 'Y',
-			updated_at = CURRENT_TIMESTAMP
-		WHERE id = #{id}
-	</update>
+	
 
 </mapper>

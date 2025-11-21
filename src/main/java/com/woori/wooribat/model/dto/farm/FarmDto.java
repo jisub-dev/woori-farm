@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class FarmDto {
 	private Integer id;
-	private Integer userId;
+	private String userId;
 	private Integer folderId;
 	private String name;
 	private String pnu;

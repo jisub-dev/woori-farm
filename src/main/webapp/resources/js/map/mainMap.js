@@ -253,7 +253,7 @@ function initMap() {
 		],
 		view: new ol.View({
 			center: ol.proj.fromLonLat([126.65, 35.97]), // 군산 좌표
-			zoom: 16,
+			zoom: 17,
 			projection: 'EPSG:3857'
 		})
 	});
@@ -277,8 +277,8 @@ function initMap() {
 			return;
 		}
 		const z = Math.round(map.getView().getZoom());
-		hintEl.innerHTML = `지적 조회는 <b>줌 레벨 17 이상</b>에서 가능합니다.<br>현재 줌 레벨: ${z}`;
-		if (z >= 17) hintEl.style.display = 'none';
+		hintEl.innerHTML = `지적 조회는 <b>줌 레벨 18 이상</b>에서 가능합니다.<br>현재 줌 레벨: ${z}`;
+		if (z >= 18) hintEl.style.display = 'none';
 		else hintEl.style.display = 'block';
 	}
 	map.getView().on('change:resolution', refreshHint); // 배율 바뀌면 줌 레벨 다시 측정
@@ -687,7 +687,84 @@ function initMap() {
 		  addInteraction();
 		};*/
 
+	// 채널톡 
+	 (function(){var w=window;if(w.ChannelIO){return w.console.error("ChannelIO script included twice.");}var ch=function(){ch.c(arguments);};ch.q=[];ch.c=function(args){ch.q.push(args);};w.ChannelIO=ch;function l(){if(w.ChannelIOInitialized){return;}w.ChannelIOInitialized=true;var s=document.createElement("script");s.type="text/javascript";s.async=true;s.src="https://cdn.channel.io/plugin/ch-plugin-web.js";var x=document.getElementsByTagName("script")[0];if(x.parentNode){x.parentNode.insertBefore(s,x);}}if(document.readyState==="complete"){l();}else{w.addEventListener("DOMContentLoaded",l);w.addEventListener("load",l);}})();
+	
+	  ChannelIO('boot', {
+	    "pluginKey": "b24f84e5-424d-49cc-ba18-547bfd387917"
+	  });
+
 
 }
 
-	
+// 사용자 드롭다운 토글
+$(document).ready(function() {
+	const userProfile = $('.user-profile');
+	const userDropdown = $('.user-dropdown');
+
+	// 사용자 프로필 클릭 시 드롭다운 토글
+	userProfile.on('click', function(e) {
+		e.stopPropagation();
+		userDropdown.toggleClass('active');
+	});
+
+	// 외부 클릭 시 드롭다운 닫기
+	$(document).on('click', function(e) {
+		if (!userProfile.is(e.target) && userProfile.has(e.target).length === 0) {
+			userDropdown.removeClass('active');
+		}
+	});
+
+	// 줌 인 버튼
+	$('.zoom-in').on('click', function() {
+		const view = map.getView();
+		const currentZoom = view.getZoom();
+		view.animate({
+			zoom: currentZoom + 1,
+			duration: 250
+		});
+	});
+
+	// 줌 아웃 버튼
+	$('.zoom-out').on('click', function() {
+		const view = map.getView();
+		const currentZoom = view.getZoom();
+		view.animate({
+			zoom: currentZoom - 1,
+			duration: 250
+		});
+	});
+
+	// 현재 위치 버튼
+	$('.btn-location').on('click', function() {
+		const button = $(this);
+
+		if (navigator.geolocation) {
+			button.attr('aria-pressed', 'true');
+
+			navigator.geolocation.getCurrentPosition(
+				function(position) {
+					const coords = ol.proj.fromLonLat([
+						position.coords.longitude,
+						position.coords.latitude
+					]);
+
+					map.getView().animate({
+						center: coords,
+						zoom: 18,
+						duration: 500
+					});
+
+					button.attr('aria-pressed', 'false');
+				},
+				function(error) {
+					alert('위치를 가져올 수 없습니다: ' + error.message);
+					button.attr('aria-pressed', 'false');
+				}
+			);
+		} else {
+			alert('이 브라우저는 위치 서비스를 지원하지 않습니다.');
+		}
+	});
+});
+

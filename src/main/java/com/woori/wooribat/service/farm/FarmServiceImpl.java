@@ -20,7 +20,7 @@ public class FarmServiceImpl implements FarmService {
 	// Farm Folder CRUD
 	@Override
 	@Transactional(readOnly = true)
-	public List<FarmFolderDto> getFarmFolders(Integer userId) {
+	public List<FarmFolderDto> getFarmFolders(String userId) {
 		return farmMapper.getFarmFolders(userId);
 	}
 
@@ -48,7 +48,7 @@ public class FarmServiceImpl implements FarmService {
 	// Farm CRUD
 	@Override
 	@Transactional(readOnly = true)
-	public List<FarmDto> getFarmsByUserId(Integer userId) {
+	public List<FarmDto> getFarmsByUserId(String userId) {
 		return farmMapper.getFarmsByUserId(userId);
 	}
 

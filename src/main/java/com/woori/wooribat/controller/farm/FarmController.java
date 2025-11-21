@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -37,11 +38,14 @@ public class FarmController {
 	 */
 	@GetMapping("/folders")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> getFarmFolders(HttpSession session) {
+	public ResponseEntity<Map<String, Object>> getFarmFolders(HttpSession session, @RequestHeader(value = "X-User-Id", required = false) String headerUserId) {
 		Map<String, Object> response = new HashMap<>();
 
 		try {
-			Integer userId = (Integer) session.getAttribute("userId");
+			String userId = (String) session.getAttribute("id");
+			 if (userId == null) {
+	              userId = headerUserId;  // 개발용: 헤더에서도 받음
+	          }
 			if (userId == null) {
 				response.put("success", false);
 				response.put("message", "로그인이 필요합니다.");
@@ -95,11 +99,14 @@ public class FarmController {
 	@PostMapping("/folders")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> createFarmFolder(@RequestBody FarmFolderDto farmFolderDto,
-			HttpSession session) {
+			HttpSession session, @RequestHeader(value = "X-User-Id", required = false)String headerUserId) {
 		Map<String, Object> response = new HashMap<>();
 
 		try {
-			Integer userId = (Integer) session.getAttribute("userId");
+			String userId = (String) session.getAttribute("id");
+			if (userId == null) {
+	              userId = headerUserId;  // 개발용: 헤더에서도 받음
+	          }
 			if (userId == null) {
 				response.put("success", false);
 				response.put("message", "로그인이 필요합니다.");
@@ -195,11 +202,14 @@ public class FarmController {
 	 */
 	@GetMapping("/farms")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> getFarmsByUserId(HttpSession session) {
+	public ResponseEntity<Map<String, Object>> getFarmsByUserId(HttpSession session, @RequestHeader(value = "X-User-Id", required = false) String headerUserId) {
 		Map<String, Object> response = new HashMap<>();
 
 		try {
-			Integer userId = (Integer) session.getAttribute("userId");
+			String userId = (String) session.getAttribute("id");
+			if (userId == null) {
+	              userId = headerUserId;  // 개발용: 헤더에서도 받음
+	          }
 			if (userId == null) {
 				response.put("success", false);
 				response.put("message", "로그인이 필요합니다.");
@@ -274,11 +284,14 @@ public class FarmController {
 	 */
 	@PostMapping("/farms")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> createFarm(@RequestBody FarmDto farmDto, HttpSession session) {
+	public ResponseEntity<Map<String, Object>> createFarm(@RequestBody FarmDto farmDto, HttpSession session, @RequestHeader(value = "X-User-Id", required = false)String headerUserId) {
 		Map<String, Object> response = new HashMap<>();
 
 		try {
-			Integer userId = (Integer) session.getAttribute("userId");
+			String userId = (String) session.getAttribute("id");
+			if (userId == null) {
+	              userId = headerUserId;  // 개발용: 헤더에서도 받음
+	          }
 			if (userId == null) {
 				response.put("success", false);
 				response.put("message", "로그인이 필요합니다.");

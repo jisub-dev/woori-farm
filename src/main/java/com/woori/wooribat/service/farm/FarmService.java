@@ -8,14 +8,14 @@ import com.woori.wooribat.model.dto.farm.FarmFolderDto;
 public interface FarmService {
 
 	// Farm Folder CRUD
-	List<FarmFolderDto> getFarmFolders(Integer userId);
+	List<FarmFolderDto> getFarmFolders(String userId);
 	FarmFolderDto getFarmFolderById(Integer id);
 	int createFarmFolder(FarmFolderDto farmFolderDto);
 	int updateFarmFolder(FarmFolderDto farmFolderDto);
 	int deleteFarmFolder(Integer id);
 
 	// Farm CRUD
-	List<FarmDto> getFarmsByUserId(Integer userId);
+	List<FarmDto> getFarmsByUserId(String userId);
 	List<FarmDto> getFarmsByFolderId(Integer folderId);
 	FarmDto getFarmById(Integer id);
 	int createFarm(FarmDto farmDto);

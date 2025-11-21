@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class FarmFolderDto {
 	private Integer id;
-	private Integer userId;
+	private String userId;
 	private String name;
 	private String description;
 	private LocalDateTime createdAt;
