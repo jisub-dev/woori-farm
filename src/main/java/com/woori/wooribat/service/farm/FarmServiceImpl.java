@@ -17,7 +17,7 @@ public class FarmServiceImpl implements FarmService {
 	@Autowired
 	private FarmMapper farmMapper;
 
-	// Farm Folder CRUD
+	// 폴더  CRUD
 	@Override
 	@Transactional(readOnly = true)
 	public List<FarmFolderDto> getFarmFolders(String userId) {
@@ -45,7 +45,7 @@ public class FarmServiceImpl implements FarmService {
 		return farmMapper.deleteFarmFolder(id);
 	}
 
-	// Farm CRUD
+	// 농지  CRUD
 	@Override
 	@Transactional(readOnly = true)
 	public List<FarmDto> getFarmsByUserId(String userId) {
@@ -67,6 +67,11 @@ public class FarmServiceImpl implements FarmService {
 	@Override
 	public int createFarm(FarmDto farmDto) {
 		return farmMapper.insertFarm(farmDto);
+	}
+
+	@Override
+	public int createDrawnFarm(FarmDto farmDto) {
+		return farmMapper.insertDrawnFarm(farmDto);
 	}
 
 	@Override

@@ -19,6 +19,7 @@ public interface FarmService {
 	List<FarmDto> getFarmsByFolderId(Integer folderId);
 	FarmDto getFarmById(Integer id);
 	int createFarm(FarmDto farmDto);
+	int createDrawnFarm(FarmDto farmDto); // 사용자가 직접 그린 농지
 	int updateFarm(FarmDto farmDto);
 	int deleteFarm(Integer id);
 }

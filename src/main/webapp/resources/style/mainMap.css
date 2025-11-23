@@ -564,6 +564,7 @@ ul, ol {
     background: #fff;
     border: none;
     transition: all 0.2s;
+    position: relative;
 }
 
 .btn-carto:hover {
@@ -577,6 +578,33 @@ ul, ol {
 
 .btn-carto + .btn-carto {
     border-left: 1px solid #e4e8eb;
+}
+
+/* 지도 타입 버튼 툴팁 */
+.btn-carto:hover::after {
+    content: attr(title);
+    position: absolute;
+    right: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+}
+
+.btn-carto:hover::before {
+    content: '';
+    position: absolute;
+    right: calc(100% + 4px);
+    top: 50%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-left-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
 }
 
 /* 도구 위젯 그룹 */
@@ -616,6 +644,33 @@ ul, ol {
 
 .widget-button[aria-pressed="true"]::before {
     filter: brightness(0) invert(1);
+}
+
+/* 툴팁 */
+.widget-button:hover::after {
+    content: attr(title);
+    position: absolute;
+    right: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+}
+
+.widget-button:hover::before {
+    content: '';
+    position: absolute;
+    right: calc(100% + 4px);
+    top: 50%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-left-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
 }
 
 /* Material Design Icons 스타일 */
@@ -660,9 +715,35 @@ ul, ol {
     position: relative;
 }
 
-
 .btn-location:hover {
     background: #f5f5f5;
+}
+
+/* 위치 버튼 툴팁 */
+.btn-location:hover::after {
+    content: attr(title);
+    position: absolute;
+    right: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+}
+
+.btn-location:hover::before {
+    content: '';
+    position: absolute;
+    right: calc(100% + 4px);
+    top: 50%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-left-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
 }
 
 .zoom-widget {
@@ -681,6 +762,33 @@ ul, ol {
 
 .btn-widget-zoom:hover {
     background: #f5f5f5;
+}
+
+/* 줌 버튼 툴팁 */
+.btn-widget-zoom:hover::after {
+    content: attr(title);
+    position: absolute;
+    right: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+}
+
+.btn-widget-zoom:hover::before {
+    content: '';
+    position: absolute;
+    right: calc(100% + 4px);
+    top: 50%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-left-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
 }
 
 
@@ -796,4 +904,818 @@ ul, ol {
 
 .panel::-webkit-scrollbar-thumb:hover {
     background: #aaa;
+}
+
+/* ========================================
+   Modal (농지 추가 모달)
+   ======================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-container {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.modal-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    padding: 5px;
+}
+
+.modal-close-btn i {
+    font-size: 20px;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #444;
+    font-size: 14px;
+}
+
+.form-label .required {
+    color: #e74c3c;
+}
+
+.form-input,
+.form-select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.form-input:focus,
+.form-select:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.form-input::placeholder {
+    color: #aaa;
+}
+
+.modal-footer {
+    padding: 12px 20px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.btn-cancel,
+.btn-save {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background: #f5f5f5;
+    color: #333;
+}
+
+.btn-save {
+    background: #4CAF50;
+    color: #fff;
+    border-color: #4CAF50;
+}
+
+.btn-save:active {
+    transform: scale(0.98);
+}
+
+/* ========================================
+   내 농지 패널
+   ======================================== */
+.my-farms-header {
+    padding: 20px;
+    border-bottom: 1px solid #e4e8eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.my-farms-header > div {
+    display: flex;
+    gap: 6px;
+}
+
+.panel-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #222;
+}
+
+.btn-view-all {
+    padding: 6px 10px;
+    background: #6c757d;
+    color: #fff;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.btn-view-all i {
+    font-size: 14px;
+    margin-right: 3px;
+}
+
+.btn-add-folder {
+    padding: 6px 10px;
+    background: #4CAF50;
+    color: #fff;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.btn-add-folder i {
+    font-size: 14px;
+    margin-right: 3px;
+}
+
+/* 폴더 목록 */
+.farm-folders-area {
+    padding: 16px;
+}
+
+.farm-folders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.folder-loading {
+    padding: 40px 20px;
+    text-align: center;
+    color: #999;
+}
+
+.folder-loading i {
+    font-size: 28px;
+}
+
+.folder-item {
+    padding: 14px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.folder-item:hover {
+    background: #f8f8f8;
+    border-color: #4CAF50;
+}
+
+.folder-icon {
+    font-size: 28px;
+    color: #4CAF50;
+}
+
+.folder-info {
+    flex: 1;
+}
+
+.folder-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.folder-count {
+    font-size: 13px;
+    color: #777;
+}
+
+.folder-arrow {
+    font-size: 18px;
+    color: #999;
+}
+
+/* 농지 목록 영역 */
+.farms-list-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    z-index: 10;
+}
+
+.farms-list-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e4e8eb;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-back {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-back i {
+    font-size: 22px;
+    color: #555;
+}
+
+.farms-list-header .folder-name {
+    flex: 1;
+    font-size: 17px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.btn-folder-edit {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.btn-folder-edit i {
+    font-size: 20px;
+    color: #6c757d;
+}
+
+.btn-folder-delete {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.btn-folder-delete i {
+    font-size: 20px;
+    color: #dc3545;
+}
+
+/* 농지 목록 */
+.farms-list {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.farm-item {
+    padding: 14px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.farm-item:hover {
+    background: #f8f8f8;
+    border-color: #4CAF50;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.farm-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.farm-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    flex: 1;
+}
+
+.farm-status {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* 상태별 색상 */
+.farm-status.status-planting {
+    background: #FFF3E0;
+    color: #E65100;
+    border: 1px solid #FFB74D;
+}
+
+.farm-status.status-planting:hover {
+    background: #FFE0B2;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.farm-status.status-transplanting {
+    background: #E3F2FD;
+    color: #1565C0;
+    border: 1px solid #64B5F6;
+}
+
+.farm-status.status-transplanting:hover {
+    background: #BBDEFB;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.farm-status.status-growing {
+    background: #E8F5E9;
+    color: #2E7D32;
+    border: 1px solid #81C784;
+}
+
+.farm-status.status-growing:hover {
+    background: #C8E6C9;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.farm-status.status-harvested {
+    background: #FFF9C4;
+    color: #F57F17;
+    border: 1px solid #FFD54F;
+}
+
+.farm-status.status-harvested:hover {
+    background: #FFF59D;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.farm-status.status-fallow {
+    background: #F3E5F5;
+    color: #6A1B9A;
+    border: 1px solid #BA68C8;
+}
+
+.farm-status.status-fallow:hover {
+    background: #E1BEE7;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.farm-status.status-unspecified {
+    background: #F5F5F5;
+    color: #616161;
+    border: 1px solid #BDBDBD;
+}
+
+.farm-status.status-unspecified:hover {
+    background: #EEEEEE;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.btn-change-folder {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    margin-right: 4px;
+}
+
+.btn-change-folder i {
+    font-size: 16px;
+    color: #2196F3;
+    transition: color 0.2s;
+}
+
+.btn-change-folder:hover i {
+    color: #1976D2;
+}
+
+.btn-delete-farm {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+}
+
+.btn-delete-farm i {
+    font-size: 16px;
+    color: #dc3545;
+}
+
+.farm-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.farm-info:hover {
+    background-color: #f5f5f5;
+}
+
+.farm-info-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #666;
+}
+
+.farm-info-row i {
+    font-size: 16px;
+    color: #999;
+}
+
+.farm-empty {
+    padding: 60px 20px;
+    text-align: center;
+    color: #999;
+}
+
+.farm-empty i {
+    font-size: 48px;
+    color: #ddd;
+    margin-bottom: 12px;
+}
+
+/* ========================================
+   통계 모달
+   ======================================== */
+.stats-summary {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stats-card {
+    flex: 1;
+    background: #f5f5f5;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.stats-label {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.stats-value {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+}
+
+.stats-section {
+    margin-top: 24px;
+}
+
+.stats-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.stats-table-wrapper {
+    overflow-x: auto;
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.stats-table th {
+    background: #f8f8f8;
+    padding: 12px 8px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #ddd;
+}
+
+.stats-table td {
+    padding: 12px 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.stats-table tbody tr:hover {
+    background: #f9f9f9;
+}
+
+.stats-table tbody tr.clickable {
+    cursor: pointer;
+}
+
+.stats-table tbody tr.clickable:hover {
+    background: #f0f0f0;
+}
+
+/* ========================================
+   가이드 모달 스타일
+   ======================================== */
+
+.guide-section {
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid #eee;
+}
+
+.guide-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.guide-section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.guide-section-title i {
+    font-size: 24px;
+    color: #4CAF50;
+}
+
+.guide-content {
+    color: #555;
+    line-height: 1.8;
+}
+
+.guide-content p {
+    margin-bottom: 12px;
+}
+
+.guide-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.guide-list li {
+    margin-bottom: 12px;
+    padding-left: 24px;
+    position: relative;
+}
+
+.guide-list li::before {
+    content: '•';
+    position: absolute;
+    left: 8px;
+    color: #4CAF50;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.guide-list strong {
+    color: #333;
+    font-weight: 600;
+}
+
+.guide-method {
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #4CAF50;
+}
+
+.guide-method:last-child {
+    margin-bottom: 0;
+}
+
+.guide-method-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.guide-method-title i {
+    color: #4CAF50;
+    font-size: 20px;
+}
+
+.guide-steps {
+    list-style: none;
+    counter-reset: step-counter;
+    padding-left: 0;
+}
+
+.guide-steps li {
+    counter-increment: step-counter;
+    margin-bottom: 12px;
+    padding-left: 32px;
+    position: relative;
+    line-height: 1.6;
+}
+
+.guide-steps li::before {
+    content: counter(step-counter);
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #4CAF50;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.guide-steps strong {
+    color: #333;
+    font-weight: 600;
+}
+
+.guide-steps i {
+    color: #4CAF50;
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+.guide-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.guide-feature {
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.guide-feature:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.guide-feature-icon {
+    margin-bottom: 12px;
+}
+
+.guide-feature-icon i {
+    font-size: 36px;
+    color: #4CAF50;
+}
+
+.guide-feature h5 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.guide-feature p {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.guide-tips {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.guide-tip {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    background: #f0f8f0;
+    border-radius: 6px;
+    border-left: 3px solid #4CAF50;
+}
+
+.guide-tip i {
+    color: #4CAF50;
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.guide-tip span {
+    color: #555;
+    line-height: 1.6;
+}
+
+.guide-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.guide-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.guide-contact-item i {
+    font-size: 20px;
+    color: #4CAF50;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+    .guide-feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .guide-method {
+        padding: 12px;
+    }
+
+    .guide-section-title {
+        font-size: 16px;
+    }
+
+    .guide-method-title {
+        font-size: 14px;
+    }
 }

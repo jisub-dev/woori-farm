@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.woori.wooribat.mapper.farm.FarmStatsMapper">
+
+	<!-- 폴더별 개수/면적 -->
+	<select id="selectFolderStats"
+		resultType="com.woori.wooribat.model.dto.farm.FolderStatsDto">
+		SELECT
+		f.folder_id,
+		COALESCE(ff.name, '미지정') AS folder_name,
+		COUNT(f.id) AS farm_count,
+		COALESCE(SUM(f.area), 0) AS total_area
+		FROM farm.farms f
+		LEFT JOIN farm.farm_folders ff
+		ON f.folder_id = ff.id
+		AND COALESCE(ff.del_yn, 'N') = 'N'
+		WHERE f.user_id = #{userId}
+		AND COALESCE(f.del_yn, 'N') = 'N'
+		GROUP BY f.folder_id, ff.name
+		ORDER BY folder_name
+	</select>
+
+	<!-- 전체 합계 (비율 계산용) -->
+	<select id="selectTotalStats"
+		resultType="com.woori.wooribat.model.dto.farm.TotalStatsDto">
+		SELECT
+		COUNT(f.id) AS total_farm_count,
+		COALESCE(SUM(f.area), 0) AS total_area
+		FROM farm.farms f
+		WHERE f.user_id = #{userId}
+		AND COALESCE(f.del_yn, 'N') = 'N'
+	</select>
+
+	<!-- 폴더 내부 상태별 개수 -->
+	<select id="selectFolderStatusStats"
+		resultType="com.woori.wooribat.model.dto.farm.FolderStatusStatsDto">
+		SELECT
+		f.folder_id,
+		COALESCE(ff.name, '미지정') AS folder_name,
+		f.current_status,
+		COUNT(*) AS cnt
+		FROM farm.farms f
+		LEFT JOIN farm.farm_folders ff
+		ON f.folder_id = ff.id
+		AND COALESCE(ff.del_yn, 'N') = 'N'
+		WHERE f.user_id = #{userId}
+		AND COALESCE(f.del_yn, 'N') = 'N'
+		<if test="folderId != null">
+			AND f.folder_id = #{folderId}
+		</if>
+		<if test="folderId == null">
+			AND f.folder_id IS NULL
+		</if>
+		GROUP BY f.folder_id, ff.name, f.current_status
+		ORDER BY folder_name, f.current_status
+	</select>
+
+</mapper>

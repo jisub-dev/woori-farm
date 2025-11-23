@@ -13,4 +13,5 @@ public class FarmFolderDto {
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private String delYn;
+	private Integer farmCount; // 폴더에 속한 농지 개수
 }

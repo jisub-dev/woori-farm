@@ -23,6 +23,7 @@ public interface FarmMapper {
 	List<FarmDto> getFarmsByFolderId(@Param("folderId") Integer folderId);
 	FarmDto getFarmById(@Param("id") Integer id);
 	int insertFarm(FarmDto farmDto);
+	int insertDrawnFarm(FarmDto farmDto); // 사용자가 직접 그린 농지
 	int updateFarm(FarmDto farmDto);
 	int deleteFarm(@Param("id") Integer id);
 }

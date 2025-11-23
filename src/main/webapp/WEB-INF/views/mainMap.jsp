@@ -12,6 +12,14 @@
 	<link rel="stylesheet" href="<c:url value='/resources/js/ol/ol.css'/>">
 	<script type="text/javascript" src="<c:url value='/resources/js/ol/dist/ol.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/resources/js/jquery-3.1.1.min.js'/>"></script>
+
+	<!-- 세션 정보를 JavaScript로 전달 -->
+	<script type="text/javascript">
+		// 세션에서 userId 가져오기
+		var sessionUserId = '<c:out value="${sessionScope.userId}" default=""/>';
+		console.log('Session User ID:', sessionUserId);
+	</script>
+
 	<script src="<c:url value='/resources/js/map/mainMap.js'/>"></script>
 
 	<!-- Custom CSS -->
@@ -59,9 +67,9 @@
 					</a>
 				</li>
 				<li class="nav-item">
-					<a href="#" class="nav-link">
-						<i class="mdi mdi-bookmark nav-icon"></i>
-						<span class="nav-text">저장</span>
+					<a href="#" class="nav-link" id="nav-guide">
+						<i class="mdi mdi-help-circle nav-icon"></i>
+						<span class="nav-text">가이드</span>
 					</a>
 				</li>
 			</ul>
@@ -113,47 +121,95 @@
 
 				<!-- Panel Content -->
 				<div class="panel" id="section_content">
-					<div class="panel-content">
+					<!-- 지도 홈 패널 -->
+					<div class="panel-content" id="panel-map-home" style="display:none;">
 						<h2 class="blind">지도 홈</h2>
 
 						<!-- 공지사항 영역 (네이버 지도 스타일) -->
-						<div class="notice-area">
+						<!-- <div class="notice-area">
 							<h3 class="blind">공지사항</h3>
-							<div class="notice-list">
+							<div class="notice-list"> -->
 								<!-- 공지사항 내용 추가 예정 -->
-							</div>
-						</div>
+							<!-- </div>
+						</div> -->
 
 						<!-- 주소 표시 영역 -->
-						<div class="address-area">
+						<!-- <div class="address-area">
 							<div class="address-content">
 								<button class="btn-address" type="button">군산시 나운동</button>
 								<button type="button" class="btn-report">오류신고</button>
 							</div>
-						</div>
+						</div> -->
 
 						<!-- Smart Around 영역 -->
-						<div class="smart-around">
+						<!-- <div class="smart-around">
 							<div class="around-wrap">
 								<h3 class="heading">
 									<span class="blind">주변 정보</span>
 								</h3>
-								<div class="around-content">
+								<div class="around-content"> -->
 									<!-- 주변 농지 정보 -->
-									<div class="my-around">
+									<!-- <div class="my-around">
 										<h3 class="my-around-heading">내 주변</h3>
 										<div class="my-around-filter">
 											<button type="button" class="btn-around-filter">
 												<strong class="point">전체</strong>
 												<span>필터</span>
 											</button>
-										</div>
+										</div> -->
 										<!-- 농지 카드 리스트 영역 -->
-										<div class="place-item-list">
+										<!-- <div class="place-item-list"> -->
 											<!-- 동적으로 농지 카드가 추가될 영역 -->
-										</div>
+										<!-- </div>
 									</div>
 								</div>
+							</div>
+						</div>-->
+					</div>
+
+					<!-- 내 농지 패널 -->
+					<div class="panel-content" id="panel-my-farms" style="display:none;">
+						<div class="my-farms-header">
+							<h2 class="panel-title">내 농지</h2>
+							<div>
+								<button type="button" class="btn-view-all" id="btn-view-all-farms">
+									<i class="mdi mdi-view-list"></i>
+									<span>전체보기</span>
+								</button>
+								<button type="button" class="btn-add-folder" id="btn-add-folder">
+									<i class="mdi mdi-folder-plus"></i>
+									<span>폴더 추가</span>
+								</button>
+							</div>
+						</div>
+
+						<!-- 폴더 목록 영역 -->
+						<div class="farm-folders-area">
+							<div id="farm-folders-list" class="farm-folders-list">
+								<!-- 폴더 목록이 동적으로 추가됩니다 -->
+								<div class="folder-loading">
+									<i class="mdi mdi-loading mdi-spin"></i>
+									<span>폴더 목록을 불러오는 중...</span>
+								</div>
+							</div>
+						</div>
+
+						<!-- 선택된 폴더의 농지 목록 영역 -->
+						<div class="farms-list-area" id="farms-list-area" style="display:none;">
+							<div class="farms-list-header">
+								<button type="button" class="btn-back" id="btn-back-to-folders">
+									<i class="mdi mdi-arrow-left"></i>
+								</button>
+								<h3 class="folder-name" id="selected-folder-name">폴더명</h3>
+								<button type="button" class="btn-folder-edit">
+									<i class="mdi mdi-pencil"></i>
+								</button>
+								<button type="button" class="btn-folder-delete">
+									<i class="mdi mdi-delete"></i>
+								</button>
+							</div>
+							<div id="farms-list" class="farms-list">
+								<!-- 농지 목록이 동적으로 추가됩니다 -->
 							</div>
 						</div>
 					</div>
@@ -174,12 +230,12 @@
 				<div class="item-carto">
 					<div class="carto-widget">
 						<div role="presentation" class="wrap-btn-carto">
-							<button type="button" id="btn_gra" aria-current="true" class="btn-carto active">
+							<button type="button" id="btn_gra" aria-current="true" class="btn-carto active" title="일반지도">
 								<span class="carto-label">일반지도</span>
 							</button>
 						</div>
 						<div role="presentation" class="wrap-btn-carto">
-							<button type="button" id="btn_pho" aria-current="false" class="btn-carto">
+							<button type="button" id="btn_pho" aria-current="false" class="btn-carto" title="위성지도">
 								<span class="carto-label">위성지도</span>
 							</button>
 						</div>
@@ -190,57 +246,64 @@
 				<div class="item-toolbox">
 					<!-- 레이어 위젯 -->
 					<div class="widget-group layer-widget">
-						<button class="widget-button widget-land" id="chAddCada" aria-pressed="false">
-							<i class="mdi mdi-map-marker-outline"></i>
-							<span class="blind">지적편집도</span>
+						<button class="widget-button widget-land" id="chAddCadaWMS" aria-pressed="false" title="지적편집도 표시 (줌 레벨 17 이상)">
+							<i class="mdi mdi-map-outline"></i>
+							<span class="blind">지적편집도 표시</span>
 						</button>
-						<button class="widget-button widget-hover" id="chAddHover" aria-pressed="false">
+						<button class="widget-button widget-click" id="chAddCadaClick" aria-pressed="false" title="지적편집도 클릭 조회 (줌 레벨 18 이상)">
+							<i class="mdi mdi-cursor-default-click-outline"></i>
+							<span class="blind">지적편집도 클릭</span>
+						</button>
+						<button class="widget-button widget-hover" id="chAddHover" aria-pressed="false" title="마우스 호버로 지적편집도 미리보기">
 							<i class="mdi mdi-cursor-default-outline"></i>
 							<span class="blind">마우스 호버</span>
 						</button>
 					</div>
 
-					<!-- 측정 도구 -->
-					<div class="widget-group toolbox-widget">
-						<button class="widget-button widget-distance" id="chLength" aria-pressed="false">
-							<i class="mdi mdi-ruler"></i>
-							<span class="blind">거리측정</span>
+					<!-- 농지 위젯 -->
+					<div class="widget-group farm-widget">
+						<button class="widget-button widget-farm" id="chAddFarmWMS" aria-pressed="false" title="농지 레이어 표시 (줌 레벨 17 이상)">
+							<i class="mdi mdi-tractor"></i>
+							<span class="blind">농지 표시</span>
 						</button>
-						<button class="widget-button widget-area" id="chArea" aria-pressed="false">
-							<i class="mdi mdi-vector-square"></i>
-							<span class="blind">면적측정</span>
+						<button class="widget-button widget-farm-click" id="chAddFarmClick" aria-pressed="false" title="농지 클릭 조회 (줌 레벨 15 이상)">
+							<i class="mdi mdi-tractor-variant"></i>
+							<span class="blind">농지 클릭</span>
 						</button>
 					</div>
 
-					<!-- 공유 & 출력 -->
-					<!-- <div class="widget-group export-widget">
-						<button class="widget-button widget-print">
-							<i class="mdi mdi-printer"></i>
-							<span class="blind">인쇄</span>
+					<!-- 측정 도구 -->
+					<div class="widget-group toolbox-widget">
+						<button class="widget-button widget-distance" id="chLength" aria-pressed="false" title="거리 측정">
+							<i class="mdi mdi-ruler"></i>
+							<span class="blind">거리측정</span>
 						</button>
-						<button class="widget-button widget-share">
-							<i class="mdi mdi-share-variant"></i>
-							<span class="blind">공유하기</span>
+						<button class="widget-button widget-area" id="chArea" aria-pressed="false" title="면적 측정">
+							<i class="mdi mdi-vector-square"></i>
+							<span class="blind">면적측정</span>
+						</button>
+						<button class="widget-button widget-draw-farm" id="chDrawFarm" aria-pressed="false" title="농지 직접 그리기">
+							<i class="mdi mdi-draw"></i>
+							<span class="blind">농지 그리기</span>
 						</button>
 					</div>
-					 -->
 				</div>
 
 				<!-- 위치 & 줌 컨트롤 -->
 				<div class="item-location">
 					<div class="widget-group location-widget">
-						<button type="button" class="btn-location" aria-pressed="false">
+						<button type="button" class="btn-location" aria-pressed="false" title="현재 위치로 이동">
 							<i class="mdi mdi-crosshairs-gps"></i>
 							<span class="blind">현재위치</span>
 						</button>
 					</div>
 
 					<div class="widget-group zoom-widget">
-						<button type="button" class="btn-widget-zoom zoom-in">
+						<button type="button" class="btn-widget-zoom zoom-in" title="지도 확대">
 							<i class="mdi mdi-plus"></i>
 							<span class="blind">확대</span>
 						</button>
-						<button type="button" class="btn-widget-zoom zoom-out">
+						<button type="button" class="btn-widget-zoom zoom-out" title="지도 축소">
 							<i class="mdi mdi-minus"></i>
 							<span class="blind">축소</span>
 						</button>
@@ -270,6 +333,431 @@
 						<span id="current-temp">--</span>°
 						<span class="blind">기온</span>
 					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 농지 추가 모달 (지도에서 선택) -->
+	<div id="farmland-add-modal" class="modal-overlay" style="display:none;">
+		<div class="modal-container">
+			<div class="modal-header">
+				<h3 class="modal-title">농지 추가</h3>
+				<button type="button" class="modal-close-btn" id="modal-close-btn">
+					<i class="mdi mdi-close"></i>
+					<span class="blind">닫기</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="farmland-name" class="form-label">농지 이름 <span class="required">*</span></label>
+					<input type="text" id="farmland-name" class="form-input" placeholder="농지 이름을 입력하세요" maxlength="50">
+				</div>
+				<div class="form-group">
+					<label for="farmland-folder" class="form-label">폴더 선택</label>
+					<select id="farmland-folder" class="form-select">
+						<option value="">미지정</option>
+						<!-- 폴더 목록이 동적으로 추가됩니다 -->
+					</select>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn-cancel" id="modal-cancel-btn">취소</button>
+				<button type="button" class="btn-save" id="modal-save-btn">저장</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- 폴리곤 그리기 완료 확인 팝업 -->
+	<div id="polygon-confirm-popup" class="ol-popup" style="display:none;">
+		<div class="polygon-confirm-content">
+			<h4 style="margin:0 0 12px 0; font-size:16px; font-weight:600;">🌾 농지 등록</h4>
+			<p style="margin:0 0 16px 0; color:#666; font-size:14px;">
+				그린 영역을 농지로 등록하시겠습니까?
+			</p>
+			<div class="polygon-area-info" id="polygon-area-display" style="margin:0 0 16px 0; padding:10px; background:#f5f5f5; border-radius:6px;">
+				<i class="mdi mdi-vector-square"></i>
+				<span style="font-weight:600;">면적: </span>
+				<span id="drawn-area-text">-</span>
+			</div>
+			<div style="display:flex; gap:8px;">
+				<button id="btn-redraw-polygon" style="flex:1; padding:10px; background:#f5f5f5; color:#666; border:none; border-radius:6px; cursor:pointer; font-weight:500;">
+					<i class="mdi mdi-refresh"></i> 다시 그리기
+				</button>
+				<button id="btn-add-drawn-farmland" style="flex:1; padding:10px; background:#4CAF50; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:500;">
+					<i class="mdi mdi-plus"></i> 농지 추가
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- 직접 그린 농지 추가 모달 -->
+	<div id="drawn-farmland-modal" class="modal-overlay" style="display:none;">
+		<div class="modal-container">
+			<div class="modal-header">
+				<h3 class="modal-title">직접 그린 농지 추가</h3>
+				<button type="button" class="modal-close-btn" id="drawn-modal-close-btn">
+					<i class="mdi mdi-close"></i>
+					<span class="blind">닫기</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="drawn-farmland-name" class="form-label">농지 이름 <span class="required">*</span></label>
+					<input type="text" id="drawn-farmland-name" class="form-input" placeholder="농지 이름을 입력하세요" maxlength="50">
+				</div>
+				<div class="form-group">
+					<label for="drawn-farmland-folder" class="form-label">폴더 선택</label>
+					<select id="drawn-farmland-folder" class="form-select">
+						<option value="">미지정</option>
+						<!-- 폴더 목록이 동적으로 추가됩니다 -->
+					</select>
+				</div>
+				<div class="form-group">
+					<label class="form-label">그린 영역 정보</label>
+					<div style="padding:12px; background:#f5f5f5; border-radius:6px;">
+						<div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+							<i class="mdi mdi-vector-square" style="font-size:20px; color:#4CAF50;"></i>
+							<span style="font-weight:600;">면적: </span>
+							<span id="drawn-area-text-modal">-</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn-cancel" id="drawn-modal-cancel-btn">취소</button>
+				<button type="button" class="btn-save" id="drawn-modal-save-btn">저장</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- 농지 상태 변경 모달 -->
+	<div id="status-change-modal" class="modal-overlay" style="display:none;">
+		<div class="modal-container" style="max-width:300px;">
+			<div class="modal-header">
+				<h3 class="modal-title">농지 상태 변경</h3>
+				<button type="button" class="modal-close-btn" onclick="closeStatusModal()">
+					<i class="mdi mdi-close"></i>
+				</button>
+			</div>
+			<div class="modal-body">
+				<select id="status-select" class="form-select">
+					<option value="씨뿌림">씨뿌림</option>
+					<option value="모내기">모내기</option>
+					<option value="성장중">성장중</option>
+					<option value="수확완료">수확완료</option>
+					<option value="휴경">휴경</option>
+				</select>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn-cancel" onclick="closeStatusModal()">취소</button>
+				<button type="button" class="btn-save" onclick="saveStatus()">변경</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- 폴더 변경 모달 -->
+	<div id="folder-change-modal" class="modal-overlay" style="display:none;">
+		<div class="modal-container" style="max-width:300px;">
+			<div class="modal-header">
+				<h3 class="modal-title">폴더 변경</h3>
+				<button type="button" class="modal-close-btn" onclick="closeFolderModal()">
+					<i class="mdi mdi-close"></i>
+				</button>
+			</div>
+			<div class="modal-body">
+				<select id="folder-select" class="form-select">
+					<option value="">미지정</option>
+				</select>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn-cancel" onclick="closeFolderModal()">취소</button>
+				<button type="button" class="btn-save" onclick="saveFolder()">변경</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- 통계 모달 -->
+	<div id="stats-modal" class="modal-overlay" style="display:none;">
+		<div class="modal-container" style="max-width:800px; width:90%;">
+			<div class="modal-header">
+				<h3 class="modal-title">농지 통계</h3>
+				<button type="button" class="modal-close-btn" onclick="closeStatsModal()">
+					<i class="mdi mdi-close"></i>
+				</button>
+			</div>
+			<div class="modal-body">
+				<!-- 전체 통계 -->
+				<div class="stats-summary">
+					<div class="stats-card">
+						<div class="stats-label">전체 농지</div>
+						<div class="stats-value" id="total-farm-count">-</div>
+					</div>
+					<div class="stats-card">
+						<div class="stats-label">전체 면적</div>
+						<div class="stats-value" id="total-area">-</div>
+					</div>
+				</div>
+
+				<!-- 폴더별 통계 -->
+				<div class="stats-section">
+					<h4 class="stats-section-title">폴더별 통계</h4>
+					<div class="stats-table-wrapper">
+						<table class="stats-table">
+							<thead>
+								<tr>
+									<th>폴더명</th>
+									<th>농지 수</th>
+									<th>비율</th>
+									<th>면적 (㎡)</th>
+									<th>비율</th>
+								</tr>
+							</thead>
+							<tbody id="folder-stats-tbody">
+								<tr>
+									<td colspan="5" style="text-align:center; padding:40px;">통계를 불러오는 중...</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<!-- 선택한 폴더의 상태별 통계 -->
+				<div class="stats-section" id="folder-status-section">
+					<h4 class="stats-section-title">폴더별 상태 통계</h4>
+					<div class="form-group" style="margin-bottom:16px;">
+						<select id="folder-status-select" class="form-select">
+							<option value="">폴더를 선택하세요</option>
+						</select>
+					</div>
+					<div class="stats-table-wrapper">
+						<table class="stats-table">
+							<thead>
+								<tr>
+									<th>상태</th>
+									<th>농지 수</th>
+									<th>비율</th>
+								</tr>
+							</thead>
+							<tbody id="folder-status-tbody">
+								<tr>
+									<td colspan="3" style="text-align:center; padding:40px; color:#999;">폴더를 선택하세요</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 가이드 모달 -->
+	<div id="guide-modal" class="modal-overlay" style="display:none;">
+		<div class="modal-container" style="max-width:900px; width:90%;">
+			<div class="modal-header">
+				<h3 class="modal-title">
+					<i class="mdi mdi-help-circle" style="margin-right:8px;"></i>
+					우리밭 사용 가이드
+				</h3>
+				<button type="button" class="modal-close-btn" onclick="closeGuideModal()">
+					<i class="mdi mdi-close"></i>
+				</button>
+			</div>
+			<div class="modal-body" style="max-height:70vh; overflow-y:auto;">
+				<!-- 시작하기 -->
+				<div class="guide-section">
+					<h4 class="guide-section-title">
+						<i class="mdi mdi-flag-checkered"></i>
+						시작하기
+					</h4>
+					<div class="guide-content">
+						<p>우리밭에 오신 것을 환영합니다! 우리밭은 농지를 효율적으로 관리하고 시각화하는 스마트 농업 관리 시스템입니다.</p>
+						<ul class="guide-list">
+							<li><strong>지도 기반 관리:</strong> 실제 농지를 지도에서 직접 확인하고 관리할 수 있습니다.</li>
+							<li><strong>폴더 구조:</strong> 농지를 폴더별로 분류하여 체계적으로 관리할 수 있습니다.</li>
+							<li><strong>실시간 통계:</strong> 농지 면적, 개수 등을 실시간으로 확인할 수 있습니다.</li>
+						</ul>
+					</div>
+				</div>
+
+				<!-- 농지 등록 방법 -->
+				<div class="guide-section">
+					<h4 class="guide-section-title">
+						<i class="mdi mdi-plus-circle"></i>
+						농지 등록 방법
+					</h4>
+					<div class="guide-content">
+						<div class="guide-method">
+							<h5 class="guide-method-title">
+								<i class="mdi mdi-numeric-1-circle"></i>
+								지적편집도에서 선택하기
+							</h5>
+							<ol class="guide-steps">
+								<li>오른쪽 지도 컨트롤에서 <i class="mdi mdi-cursor-default-click-outline"></i> <strong>지적편집도 클릭</strong> 버튼을 활성화합니다.</li>
+								<li>지도를 줌 레벨 18 이상으로 확대합니다.</li>
+								<li>원하는 농지를 클릭하면 농지 추가 모달이 열립니다.</li>
+								<li>농지 이름과 폴더를 선택하고 저장합니다.</li>
+							</ol>
+						</div>
+
+						<div class="guide-method">
+							<h5 class="guide-method-title">
+								<i class="mdi mdi-numeric-2-circle"></i>
+								직접 그려서 등록하기
+							</h5>
+							<ol class="guide-steps">
+								<li>오른쪽 지도 컨트롤에서 <i class="mdi mdi-draw"></i> <strong>농지 그리기</strong> 버튼을 클릭합니다.</li>
+								<li>지도에서 클릭하여 농지 경계를 그립니다.</li>
+								<li>더블클릭으로 그리기를 완료합니다.</li>
+								<li>확인 팝업에서 면적을 확인하고 <strong>농지 추가</strong>를 클릭합니다.</li>
+								<li>농지 정보를 입력하고 저장합니다.</li>
+							</ol>
+						</div>
+					</div>
+				</div>
+
+				<!-- 폴더 관리 -->
+				<div class="guide-section">
+					<h4 class="guide-section-title">
+						<i class="mdi mdi-folder-multiple"></i>
+						폴더 관리
+					</h4>
+					<div class="guide-content">
+						<ul class="guide-list">
+							<li><strong>폴더 추가:</strong> 상단 <i class="mdi mdi-folder-plus"></i> <strong>폴더 추가</strong> 버튼을 클릭하여 새 폴더를 만들 수 있습니다.</li>
+							<li><strong>폴더 수정:</strong> 폴더 카드의 편집 버튼 <i class="mdi mdi-pencil"></i>을 클릭하여 폴더명을 변경할 수 있습니다.</li>
+							<li><strong>폴더 삭제:</strong> 삭제 버튼 <i class="mdi mdi-delete"></i>을 클릭하면 폴더를 삭제할 수 있습니다. (폴더 내 농지는 미지정으로 이동됩니다)</li>
+							<li><strong>폴더 보기:</strong> 폴더 카드를 클릭하면 해당 폴더의 농지 목록을 볼 수 있습니다.</li>
+						</ul>
+					</div>
+				</div>
+
+				<!-- 지도 기능 -->
+				<div class="guide-section">
+					<h4 class="guide-section-title">
+						<i class="mdi mdi-map"></i>
+						지도 기능 활용
+					</h4>
+					<div class="guide-content">
+						<div class="guide-feature-grid">
+							<div class="guide-feature">
+								<div class="guide-feature-icon">
+									<i class="mdi mdi-map-outline"></i>
+								</div>
+								<h5>지적편집도</h5>
+								<p>실제 필지 경계를 지도에 표시합니다. 줌 레벨 17 이상에서 활성화됩니다.</p>
+							</div>
+
+							<div class="guide-feature">
+								<div class="guide-feature-icon">
+									<i class="mdi mdi-tractor"></i>
+								</div>
+								<h5>농지 레이어</h5>
+								<p>등록된 모든 농지를 지도에 표시합니다. 클릭하면 상세 정보를 확인할 수 있습니다.</p>
+							</div>
+
+							<div class="guide-feature">
+								<div class="guide-feature-icon">
+									<i class="mdi mdi-ruler"></i>
+								</div>
+								<h5>거리/면적 측정</h5>
+								<p>지도에서 직접 거리와 면적을 측정할 수 있습니다.</p>
+							</div>
+
+							<div class="guide-feature">
+								<div class="guide-feature-icon">
+									<i class="mdi mdi-cursor-default-outline"></i>
+								</div>
+								<h5>마우스 호버</h5>
+								<p>마우스를 올리면 지적편집도 정보를 미리 볼 수 있습니다.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 농지 관리 -->
+				<div class="guide-section">
+					<h4 class="guide-section-title">
+						<i class="mdi mdi-cog"></i>
+						농지 관리
+					</h4>
+					<div class="guide-content">
+						<ul class="guide-list">
+							<li><strong>상태 변경:</strong> 농지 카드에서 상태 드롭다운을 클릭하여 농지의 현재 상태(씨뿌림, 모내기, 성장중, 수확완료, 휴경)를 변경할 수 있습니다.</li>
+							<li><strong>폴더 이동:</strong> 농지를 다른 폴더로 이동하거나 미지정 상태로 변경할 수 있습니다.</li>
+							<li><strong>농지 삭제:</strong> 더 이상 필요하지 않은 농지는 삭제할 수 있습니다.</li>
+							<li><strong>지도에서 보기:</strong> <i class="mdi mdi-map-marker"></i> 버튼을 클릭하면 해당 농지 위치로 지도가 이동합니다.</li>
+						</ul>
+					</div>
+				</div>
+
+				<!-- 통계 확인 -->
+				<div class="guide-section">
+					<h4 class="guide-section-title">
+						<i class="mdi mdi-chart-line"></i>
+						통계 확인
+					</h4>
+					<div class="guide-content">
+						<p>상단 메뉴의 <strong>통계</strong>를 클릭하면 다음 정보를 확인할 수 있습니다:</p>
+						<ul class="guide-list">
+							<li><strong>전체 통계:</strong> 총 농지 개수와 전체 면적을 한눈에 확인</li>
+							<li><strong>폴더별 통계:</strong> 각 폴더의 농지 개수, 면적, 비율을 비교</li>
+							<li><strong>상태별 통계:</strong> 폴더별로 농지 상태 분포를 확인</li>
+						</ul>
+					</div>
+				</div>
+
+				<!-- 팁과 요령 -->
+				<div class="guide-section">
+					<h4 class="guide-section-title">
+						<i class="mdi mdi-lightbulb"></i>
+						팁과 요령
+					</h4>
+					<div class="guide-content">
+						<div class="guide-tips">
+							<div class="guide-tip">
+								<i class="mdi mdi-check-circle"></i>
+								<span>농지 이름은 위치나 작물명을 포함하면 관리하기 쉽습니다. (예: 동쪽밭-벼, 서쪽밭-고추)</span>
+							</div>
+							<div class="guide-tip">
+								<i class="mdi mdi-check-circle"></i>
+								<span>폴더를 작물별, 지역별, 또는 용도별로 구분하면 효율적입니다.</span>
+							</div>
+							<div class="guide-tip">
+								<i class="mdi mdi-check-circle"></i>
+								<span>농지 상태를 주기적으로 업데이트하면 농작업 일정을 한눈에 파악할 수 있습니다.</span>
+							</div>
+							<div class="guide-tip">
+								<i class="mdi mdi-check-circle"></i>
+								<span>지도 유형을 위성지도로 변경하면 실제 농지 모습을 확인할 수 있습니다.</span>
+							</div>
+							<div class="guide-tip">
+								<i class="mdi mdi-check-circle"></i>
+								<span>측정 도구로 미리 면적을 확인한 후 농지를 등록하면 정확합니다.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 문의하기 -->
+				<div class="guide-section">
+					<h4 class="guide-section-title">
+						<i class="mdi mdi-face-agent"></i>
+						도움이 필요하신가요?
+					</h4>
+					<div class="guide-content">
+						<p>추가 문의사항이 있으시면 언제든지 연락 주세요:</p>
+						<div class="guide-contact">
+							<div class="guide-contact-item">
+								<i class="mdi mdi-email"></i>
+								<span>이메일: support@wooribat.com</span>
+							</div>
+							<div class="guide-contact-item">
+								<i class="mdi mdi-phone"></i>
+								<span>전화: 1588-0000</span>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

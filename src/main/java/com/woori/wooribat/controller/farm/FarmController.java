@@ -38,14 +38,11 @@ public class FarmController {
 	 */
 	@GetMapping("/folders")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> getFarmFolders(HttpSession session, @RequestHeader(value = "X-User-Id", required = false) String headerUserId) {
+	public ResponseEntity<Map<String, Object>> getFarmFolders(HttpSession session) {
 		Map<String, Object> response = new HashMap<>();
 
 		try {
-			String userId = (String) session.getAttribute("id");
-			 if (userId == null) {
-	              userId = headerUserId;  // 개발용: 헤더에서도 받음
-	          }
+			String userId = (String) session.getAttribute("userId");
 			if (userId == null) {
 				response.put("success", false);
 				response.put("message", "로그인이 필요합니다.");
@@ -53,8 +50,16 @@ public class FarmController {
 			}
 
 			List<FarmFolderDto> folders = farmService.getFarmFolders(userId);
+			
+			// "미지정" 폴더의 농지 개수 계산 (folderId가 null인 농지 개수)
+			List<FarmDto> allFarms = farmService.getFarmsByUserId(userId);
+			long unassignedCount = allFarms.stream()
+					.filter(farm -> farm.getFolderId() == null)
+					.count();
+			
 			response.put("success", true);
 			response.put("data", folders);
+			response.put("unassignedCount", unassignedCount); // 미지정 폴더의 농지 개수
 			return ResponseEntity.ok(response);
 
 		} catch (Exception e) {
@@ -99,14 +104,11 @@ public class FarmController {
 	@PostMapping("/folders")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> createFarmFolder(@RequestBody FarmFolderDto farmFolderDto,
-			HttpSession session, @RequestHeader(value = "X-User-Id", required = false)String headerUserId) {
+			HttpSession session) {
 		Map<String, Object> response = new HashMap<>();
 
 		try {
-			String userId = (String) session.getAttribute("id");
-			if (userId == null) {
-	              userId = headerUserId;  // 개발용: 헤더에서도 받음
-	          }
+			String userId = (String) session.getAttribute("userId");
 			if (userId == null) {
 				response.put("success", false);
 				response.put("message", "로그인이 필요합니다.");
@@ -202,14 +204,11 @@ public class FarmController {
 	 */
 	@GetMapping("/farms")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> getFarmsByUserId(HttpSession session, @RequestHeader(value = "X-User-Id", required = false) String headerUserId) {
+	public ResponseEntity<Map<String, Object>> getFarmsByUserId(HttpSession session) {
 		Map<String, Object> response = new HashMap<>();
 
 		try {
-			String userId = (String) session.getAttribute("id");
-			if (userId == null) {
-	              userId = headerUserId;  // 개발용: 헤더에서도 받음
-	          }
+			String userId = (String) session.getAttribute("userId");
 			if (userId == null) {
 				response.put("success", false);
 				response.put("message", "로그인이 필요합니다.");
@@ -284,14 +283,11 @@ public class FarmController {
 	 */
 	@PostMapping("/farms")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> createFarm(@RequestBody FarmDto farmDto, HttpSession session, @RequestHeader(value = "X-User-Id", required = false)String headerUserId) {
+	public ResponseEntity<Map<String, Object>> createFarm(@RequestBody FarmDto farmDto, HttpSession session) {
 		Map<String, Object> response = new HashMap<>();
 
 		try {
-			String userId = (String) session.getAttribute("id");
-			if (userId == null) {
-	              userId = headerUserId;  // 개발용: 헤더에서도 받음
-	          }
+			String userId = (String) session.getAttribute("userId");
 			if (userId == null) {
 				response.put("success", false);
 				response.put("message", "로그인이 필요합니다.");
@@ -375,6 +371,47 @@ public class FarmController {
 			e.printStackTrace();
 			response.put("success", false);
 			response.put("message", "농지 삭제에 실패했습니다.");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
+	}
+
+	/**
+	 * 사용자가 직접 그린 농지 생성
+	 */
+	@PostMapping("/farms/drawn")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> createDrawnFarm(@RequestBody FarmDto farmDto, HttpSession session, @RequestHeader(value = "userId", required = false)String headerUserId) {
+		Map<String, Object> response = new HashMap<>();
+
+		try {
+			String userId = (String) session.getAttribute("userId");
+			if (userId == null) {
+				userId = headerUserId;  // 개발용: 헤더에서도 받음
+			}
+			if (userId == null) {
+				response.put("success", false);
+				response.put("message", "로그인이 필요합니다.");
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+			}
+
+			farmDto.setUserId(userId);
+			int result = farmService.createDrawnFarm(farmDto);
+
+			if (result > 0) {
+				response.put("success", true);
+				response.put("message", "직접 그린 농지가 생성되었습니다.");
+				response.put("data", farmDto);
+				return ResponseEntity.status(HttpStatus.CREATED).body(response);
+			} else {
+				response.put("success", false);
+				response.put("message", "농지 생성에 실패했습니다.");
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("success", false);
+			response.put("message", "농지 생성에 실패했습니다: " + e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
 	}

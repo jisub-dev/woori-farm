@@ -20,4 +20,8 @@ public class FarmDto {
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private String delYn;
+	private Long farmlandId; // farmland_master 테이블 참조
+	private String userGeom; // 사용자가 직접 그린 폴리곤 (WKT 형식)
+	private String sourceType; // 'MASTER' or 'USER_DRAWN'
+	private String geomGeoJson; // GeoJSON 형태의 geometry
 }

@@ -5,15 +5,18 @@
 	<!-- Farm Folder CRUD -->
 	<select id="getFarmFolders" parameterType="String" resultType="com.woori.wooribat.model.dto.farm.FarmFolderDto">
 		SELECT
-			id,
-			user_id AS userId,
-			name,
-			description,
-			created_at AS createdAt,
-			updated_at AS updatedAt
-		FROM farm.farm_folders
-		WHERE user_id = #{userId}
-		ORDER BY created_at DESC
+			ff.id,
+			ff.user_id AS userId,
+			ff.name,
+			ff.description,
+			ff.created_at AS createdAt,
+			ff.updated_at AS updatedAt,
+			COALESCE(COUNT(f.id), 0) AS farmCount
+		FROM farm.farm_folders ff
+		LEFT JOIN farm.farms f ON ff.id = f.folder_id AND f.del_yn = 'N'
+		WHERE ff.user_id = #{userId} AND ff.del_yn = 'N'
+		GROUP BY ff.id, ff.user_id, ff.name, ff.description, ff.created_at, ff.updated_at
+		ORDER BY ff.created_at DESC
 	</select>
 
 	<select id="getFarmFolderById" parameterType="Integer" resultType="com.woori.wooribat.model.dto.farm.FarmFolderDto">
@@ -43,7 +46,10 @@
 	</update>
 
 	<delete id="deleteFarmFolder" parameterType="Integer">
-		DELETE FROM farm.farm_folders
+		UPDATE farm.farm_folders
+		SET
+			del_yn = 'Y',
+			updated_at = CURRENT_TIMESTAMP
 		WHERE id = #{id}
 	</delete>
 
@@ -88,6 +94,107 @@
 		ORDER BY created_at DESC
 	</select>
 
-	
+	<select id="getFarmById" parameterType="Integer" resultType="com.woori.wooribat.model.dto.farm.FarmDto">
+		SELECT
+			id,
+			user_id AS userId,
+			folder_id AS folderId,
+			name,
+			pnu,
+			address,
+			ST_AsText(center_point) AS centerPoint,
+			area,
+			current_status AS currentStatus,
+			memo,
+			created_at AS createdAt,
+			updated_at AS updatedAt,
+			del_yn AS delYn,
+			farmland_id AS farmlandId,
+			source_type AS sourceType,
+			CASE 
+				WHEN source_type = 'USER_DRAWN' THEN ST_AsGeoJSON(user_geom)
+				WHEN source_type = 'MASTER' AND farmland_id IS NOT NULL THEN 
+					(SELECT ST_AsGeoJSON(geom) FROM farm.farmland_master WHERE id = farms.farmland_id)
+				ELSE NULL
+			END AS geomGeoJson
+		FROM farm.farms
+		WHERE id = #{id}
+	</select>
+
+	<insert id="insertFarm" parameterType="com.woori.wooribat.model.dto.farm.FarmDto" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO farm.farms (
+			user_id,
+			folder_id,
+			name,
+			pnu,
+			farmland_id,
+			source_type,
+			created_at,
+			updated_at,
+			del_yn
+		)
+		VALUES (
+			#{userId},
+			#{folderId},
+			#{name},
+			#{pnu},
+			#{farmlandId},
+			'MASTER',
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP,
+			'N'
+		)
+	</insert>
+
+	<!-- 사용자가 직접 그린 농지 저장 -->
+	<insert id="insertDrawnFarm" parameterType="com.woori.wooribat.model.dto.farm.FarmDto" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO farm.farms (
+			user_id,
+			folder_id,
+			name,
+			pnu,
+			user_geom,
+			area,
+			source_type,
+			current_status,
+			created_at,
+			updated_at,
+			del_yn
+		)
+		VALUES (
+			#{userId},
+			#{folderId},
+			#{name},
+			'USER_DRAWN',
+			ST_GeomFromText(#{userGeom}, 3857),
+			#{area},
+			'USER_DRAWN',
+			COALESCE(#{currentStatus}, '미지정'),
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP,
+			'N'
+		)
+	</insert>
+
+	<update id="updateFarm" parameterType="com.woori.wooribat.model.dto.farm.FarmDto">
+		UPDATE farm.farms
+		SET
+			<if test="folderId != null">folder_id = #{folderId},</if>
+			<if test="name != null and name != ''">name = #{name},</if>
+			<if test="address != null">address = #{address},</if>
+			<if test="area != null">area = #{area},</if>
+			<if test="currentStatus != null and currentStatus != ''">current_status = #{currentStatus},</if>
+			<if test="memo != null">memo = #{memo},</if>
+			updated_at = CURRENT_TIMESTAMP
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteFarm" parameterType="Integer">
+		UPDATE farm.farms
+		SET
+			del_yn = 'Y',
+			updated_at = CURRENT_TIMESTAMP
+		WHERE id = #{id}
+	</delete>
 
 </mapper>
