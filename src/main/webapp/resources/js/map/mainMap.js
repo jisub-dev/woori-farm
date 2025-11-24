@@ -1326,10 +1326,7 @@ function initMap() {
 		const layerName = type === 'cadastre' ? '지적편집도' : '농지';
 
 		wmsHintEl.innerHTML = `
-			<div style="font-weight:bold;margin-bottom:4px;">⚠️ ${layerName} 레이어 표시 불가</div>
-			<div>필요 줌 레벨: <b>${minZoom}</b> 이상</div>
-			<div>현재 줌 레벨: <b>${currentZoom}</b></div>
-			<div style="margin-top:6px;font-size:12px;">지도를 더 확대해주세요 (+ 버튼 또는 마우스 휠)</div>
+			
 		`;
 		wmsHintEl.style.display = 'block';
 	}
@@ -2623,6 +2620,10 @@ $(document).ready(function() {
 
 // ============= 통계 기능 =============
 
+// 차트 인스턴스 저장
+let folderAreaChart = null;
+let folderStatusChart = null;
+
 // 통계 모달 열기
 function openStatsModal() {
 	if (!sessionUserId) {
@@ -2637,6 +2638,15 @@ function openStatsModal() {
 // 통계 모달 닫기
 function closeStatsModal() {
 	$('#stats-modal').hide();
+	// 차트 정리
+	if (folderAreaChart) {
+		folderAreaChart.destroy();
+		folderAreaChart = null;
+	}
+	if (folderStatusChart) {
+		folderStatusChart.destroy();
+		folderStatusChart = null;
+	}
 }
 
 // 폴더별 통계 로드
@@ -2672,6 +2682,9 @@ function loadFolderStats() {
 						tbody.append(row);
 					});
 
+					// 도넛 차트 그리기
+					createFolderAreaChart(stats.folders);
+
 					// 폴더 선택 드롭다운 채우기
 					const select = $('#folder-status-select');
 					select.empty();
@@ -2691,6 +2704,90 @@ function loadFolderStats() {
 			console.error('통계 로드 에러:', err);
 			alert('통계를 불러오는 중 오류가 발생했습니다.');
 		});
+}
+
+// 폴더별 면적 도넛 차트 생성
+function createFolderAreaChart(folders) {
+	// 기존 차트 제거
+	if (folderAreaChart) {
+		folderAreaChart.destroy();
+	}
+
+	const ctx = document.getElementById('folder-area-chart');
+	if (!ctx) return;
+
+	// 데이터 준비
+	const labels = folders.map(f => f.folderName || '미지정');
+	const areas = folders.map(f => f.totalArea);
+	const farmCounts = folders.map(f => f.farmCount);
+	const areaRatios = folders.map(f => f.areaRatio);
+
+	// 색상 팔레트
+	const colors = [
+		'rgba(75, 192, 192, 0.8)',
+		'rgba(255, 99, 132, 0.8)',
+		'rgba(255, 206, 86, 0.8)',
+		'rgba(54, 162, 235, 0.8)',
+		'rgba(153, 102, 255, 0.8)',
+		'rgba(255, 159, 64, 0.8)',
+		'rgba(201, 203, 207, 0.8)',
+		'rgba(76, 175, 80, 0.8)'
+	];
+
+	folderAreaChart = new Chart(ctx, {
+		type: 'doughnut',
+		data: {
+			labels: labels,
+			datasets: [{
+				data: areas,
+				backgroundColor: colors.slice(0, folders.length),
+				borderWidth: 2,
+				borderColor: '#fff'
+			}]
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: true,
+			plugins: {
+				legend: {
+					position: 'bottom',
+					labels: {
+						padding: 15,
+						font: {
+							size: 12
+						}
+					}
+				},
+				tooltip: {
+					callbacks: {
+						label: function(context) {
+							const index = context.dataIndex;
+							const folderName = labels[index];
+							const area = areas[index].toFixed(1);
+							const farmCount = farmCounts[index];
+							const ratio = areaRatios[index];
+							return [
+								`${folderName}`,
+								`농지 수: ${farmCount}개`,
+								`면적: ${area} ㎡`,
+								`비율: ${ratio}%`
+							];
+						}
+					},
+					backgroundColor: 'rgba(0, 0, 0, 0.8)',
+					padding: 12,
+					titleFont: {
+						size: 14,
+						weight: 'bold'
+					},
+					bodyFont: {
+						size: 13
+					},
+					bodySpacing: 6
+				}
+			}
+		}
+	});
 }
 
 // 폴더별 상태 통계 로드
@@ -2723,14 +2820,124 @@ function loadFolderStatusStats(folderId) {
 					`;
 						tbody.append(row);
 					});
+
+					// 막대 그래프 그리기
+					createFolderStatusChart(stats.statusStats);
 				} else {
 					tbody.append('<tr><td colspan="3" style="text-align:center; padding:40px;">상태 정보가 없습니다.</td></tr>');
+					// 차트 제거
+					if (folderStatusChart) {
+						folderStatusChart.destroy();
+						folderStatusChart = null;
+					}
 				}
 			}
 		})
 		.catch(err => {
 			console.error('폴더 상태 통계 로드 에러:', err);
 		});
+}
+
+// 폴더별 상태 막대 그래프 생성
+function createFolderStatusChart(statusStats) {
+	// 기존 차트 제거
+	if (folderStatusChart) {
+		folderStatusChart.destroy();
+	}
+
+	const ctx = document.getElementById('folder-status-chart');
+	if (!ctx) return;
+
+	// 데이터 준비
+	const labels = statusStats.map(s => s.currentStatus || '-');
+	const counts = statusStats.map(s => s.cnt);
+	const ratios = statusStats.map(s => s.ratio);
+
+	// 상태별 색상 매핑
+	const statusColors = {
+		'씨뿌림': 'rgba(139, 195, 74, 0.8)',
+		'모내기': 'rgba(3, 169, 244, 0.8)',
+		'성장중': 'rgba(76, 175, 80, 0.8)',
+		'수확완료': 'rgba(255, 152, 0, 0.8)',
+		'휴경': 'rgba(158, 158, 158, 0.8)',
+		'미지정': 'rgba(189, 189, 189, 0.8)'
+	};
+
+	const backgroundColors = labels.map(label =>
+		statusColors[label] || 'rgba(96, 125, 139, 0.8)'
+	);
+
+	folderStatusChart = new Chart(ctx, {
+		type: 'bar',
+		data: {
+			labels: labels,
+			datasets: [{
+				label: '농지 수',
+				data: counts,
+				backgroundColor: backgroundColors,
+				borderColor: backgroundColors.map(c => c.replace('0.8', '1')),
+				borderWidth: 2
+			}]
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: true,
+			scales: {
+				y: {
+					beginAtZero: true,
+					ticks: {
+						stepSize: 1,
+						font: {
+							size: 12
+						}
+					},
+					grid: {
+						color: 'rgba(0, 0, 0, 0.05)'
+					}
+				},
+				x: {
+					ticks: {
+						font: {
+							size: 12
+						}
+					},
+					grid: {
+						display: false
+					}
+				}
+			},
+			plugins: {
+				legend: {
+					display: false
+				},
+				tooltip: {
+					callbacks: {
+						label: function(context) {
+							const index = context.dataIndex;
+							const status = labels[index];
+							const count = counts[index];
+							const ratio = ratios[index];
+							return [
+								`상태: ${status}`,
+								`농지 수: ${count}개`,
+								`비율: ${ratio}%`
+							];
+						}
+					},
+					backgroundColor: 'rgba(0, 0, 0, 0.8)',
+					padding: 12,
+					titleFont: {
+						size: 14,
+						weight: 'bold'
+					},
+					bodyFont: {
+						size: 13
+					},
+					bodySpacing: 6
+				}
+			}
+		}
+	});
 }
 
 // ============= 가이드 기능 =============

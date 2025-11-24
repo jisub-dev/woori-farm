@@ -4,8 +4,14 @@
 	namespace="com.woori.wooribat.mapper.farm.FarmStatsMapper">
 
 	<!-- 폴더별 개수/면적 -->
-	<select id="selectFolderStats"
-		resultType="com.woori.wooribat.model.dto.farm.FolderStatsDto">
+	<resultMap id="FolderStatsResultMap" type="com.woori.wooribat.model.dto.farm.FolderStatsDto">
+		<result column="folder_id" property="folderId"/>
+		<result column="folder_name" property="folderName"/>
+		<result column="farm_count" property="farmCount"/>
+		<result column="total_area" property="totalArea"/>
+	</resultMap>
+
+	<select id="selectFolderStats" resultMap="FolderStatsResultMap">
 		SELECT
 		f.folder_id,
 		COALESCE(ff.name, '미지정') AS folder_name,

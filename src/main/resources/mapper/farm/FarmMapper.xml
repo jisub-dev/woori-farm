@@ -144,22 +144,25 @@
 			name,
 			pnu,
 			farmland_id,
+			area,
 			source_type,
 			created_at,
 			updated_at,
 			del_yn
 		)
-		VALUES (
+		SELECT
 			#{userId},
 			#{folderId},
 			#{name},
 			#{pnu},
 			#{farmlandId},
+			COALESCE(fl_ar, ST_Area(ST_Transform(geom, 5179))),
 			'MASTER',
 			CURRENT_TIMESTAMP,
 			CURRENT_TIMESTAMP,
 			'N'
-		)
+		FROM farm.farmland_master
+		WHERE id = #{farmlandId}
 	</insert>
 
 	<!-- 사용자가 직접 그린 농지 저장 -->

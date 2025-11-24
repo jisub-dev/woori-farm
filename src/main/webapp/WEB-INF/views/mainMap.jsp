@@ -13,6 +13,9 @@
 	<script type="text/javascript" src="<c:url value='/resources/js/ol/dist/ol.js'/>"></script>
 	<script type="text/javascript" src="<c:url value='/resources/js/jquery-3.1.1.min.js'/>"></script>
 
+	<!-- Chart.js -->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
 	<!-- 세션 정보를 JavaScript로 전달 -->
 	<script type="text/javascript">
 		// 세션에서 userId 가져오기
@@ -281,7 +284,7 @@
 	</div>
 
 	<!-- 날씨 플로팅 버튼 -->
-	<div class="weather-floating-button">
+	<!-- <div class="weather-floating-button">
 		<div role="button" tabindex="0" class="weather-btn">
 			<div class="weather-info-wrap">
 				<div class="weather-info-area">
@@ -295,7 +298,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 	<!-- 농지 추가 모달 (지도에서 선택) -->
 	<div id="farmland-add-modal" class="modal-overlay" style="display:none;">
@@ -438,14 +441,14 @@
 
 	<!-- 통계 모달 -->
 	<div id="stats-modal" class="modal-overlay" style="display:none;">
-		<div class="modal-container" style="max-width:800px; width:90%;">
+		<div class="modal-container" style="max-width:800px; width:90%; max-height:90vh; display:flex; flex-direction:column;">
 			<div class="modal-header">
 				<h3 class="modal-title">농지 통계</h3>
 				<button type="button" class="modal-close-btn" onclick="closeStatsModal()">
 					<i class="mdi mdi-close"></i>
 				</button>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body" style="overflow-y:auto; flex:1;">
 				<!-- 전체 통계 -->
 				<div class="stats-summary">
 					<div class="stats-card">
@@ -460,7 +463,10 @@
 
 				<!-- 폴더별 통계 -->
 				<div class="stats-section">
-					<h4 class="stats-section-title">폴더별 통계</h4>
+					<h4 class="stats-section-title">폴더별 면적 통계</h4>
+					<div style="max-width:400px; margin:0 auto 24px; padding:20px;">
+						<canvas id="folder-area-chart"></canvas>
+					</div>
 					<div class="stats-table-wrapper">
 						<table class="stats-table">
 							<thead>
@@ -488,6 +494,9 @@
 						<select id="folder-status-select" class="form-select">
 							<option value="">폴더를 선택하세요</option>
 						</select>
+					</div>
+					<div style="max-width:500px; margin:0 auto 24px; padding:20px;">
+						<canvas id="folder-status-chart"></canvas>
 					</div>
 					<div class="stats-table-wrapper">
 						<table class="stats-table">

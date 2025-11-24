@@ -31,6 +31,10 @@ public class FarmStatsServiceImpl implements FarmStatsService{
         }
 
         for (FolderStatsDto dto : list) {
+            if (dto == null) {
+                continue;
+            }
+
             if (totalCount > 0) {
                 dto.setCountRatio(round(dto.getFarmCount() * 100.0 / totalCount));
             } else {
