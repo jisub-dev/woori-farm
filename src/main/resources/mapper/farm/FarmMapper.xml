@@ -68,7 +68,15 @@
 			memo,
 			created_at AS createdAt,
 			updated_at AS updatedAt,
-			del_yn AS delYn
+			del_yn AS delYn,
+			farmland_id AS farmlandId,
+			source_type AS sourceType,
+			CASE
+				WHEN source_type = 'USER_DRAWN' THEN ST_AsGeoJSON(user_geom)
+				WHEN source_type = 'MASTER' AND farmland_id IS NOT NULL THEN
+					(SELECT ST_AsGeoJSON(geom) FROM farm.farmland_master WHERE id = farms.farmland_id)
+				ELSE NULL
+			END AS geomGeoJson
 		FROM farm.farms
 		WHERE user_id = #{userId} AND del_yn = 'N'
 		ORDER BY created_at DESC
@@ -88,7 +96,15 @@
 			memo,
 			created_at AS createdAt,
 			updated_at AS updatedAt,
-			del_yn AS delYn
+			del_yn AS delYn,
+			farmland_id AS farmlandId,
+			source_type AS sourceType,
+			CASE
+				WHEN source_type = 'USER_DRAWN' THEN ST_AsGeoJSON(user_geom)
+				WHEN source_type = 'MASTER' AND farmland_id IS NOT NULL THEN
+					(SELECT ST_AsGeoJSON(geom) FROM farm.farmland_master WHERE id = farms.farmland_id)
+				ELSE NULL
+			END AS geomGeoJson
 		FROM farm.farms
 		WHERE folder_id = #{folderId} AND del_yn = 'N'
 		ORDER BY created_at DESC

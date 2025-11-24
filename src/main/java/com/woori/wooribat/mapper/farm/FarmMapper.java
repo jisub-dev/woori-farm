@@ -11,14 +11,14 @@ import com.woori.wooribat.model.dto.farm.FarmFolderDto;
 @Mapper
 public interface FarmMapper {
 
-	// Farm Folder CRUD
+	// 폴더
 	List<FarmFolderDto> getFarmFolders(@Param("userId") String userId);
 	FarmFolderDto getFarmFolderById(@Param("id") Integer id);
 	int insertFarmFolder(FarmFolderDto farmFolderDto);
 	int updateFarmFolder(FarmFolderDto farmFolderDto);
 	int deleteFarmFolder(@Param("id") Integer id);
 
-	// Farm CRUD
+	// 농지
 	List<FarmDto> getFarmsByUserId(@Param("userId") String userId);
 	List<FarmDto> getFarmsByFolderId(@Param("folderId") Integer folderId);
 	FarmDto getFarmById(@Param("id") Integer id);

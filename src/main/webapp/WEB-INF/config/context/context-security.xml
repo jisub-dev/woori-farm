@@ -11,7 +11,9 @@
 		http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- OAuth2 Properties 로드 -->
-	<context:property-placeholder location="classpath:oauth.properties" ignore-unresolvable="true"/>
+	<context:property-placeholder location="classpath:oauth.properties"
+		ignore-unresolvable="true"
+		ignore-resource-not-found="true"/>
 
 	<!-- HTTP Firewall 설정 (세미콜론 허용) -->
 	<beans:bean id="httpFirewall" class="org.springframework.security.web.firewall.StrictHttpFirewall">
@@ -20,17 +22,8 @@
 
 	<http-firewall ref="httpFirewall"/>
 
-	<!-- Spring Security 비활성화 (OAuth는 수동으로 처리) -->
-	<http pattern="/resources/**" security="none"/>
-	<http pattern="/login.do" security="none"/>
-	<http pattern="/oauth2callback.do" security="none"/>
-	<http pattern="/oauth2/google.do" security="none"/>
-	<http pattern="/gis.do" security="none"/>
-
-	<http auto-config="true" use-expressions="true">
-		<intercept-url pattern="/**" access="permitAll" />
-		<csrf disabled="true"/>
-	</http>
+	<!-- Spring Security 완전 비활성화 (커스텀 인터셉터 사용) -->
+	<http pattern="/**" security="none"/>
 
 	<authentication-manager>
 	</authentication-manager>

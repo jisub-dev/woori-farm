@@ -1,5 +1,6 @@
 package com.woori.wooribat.controller.farm;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.woori.wooribat.model.dto.farm.FarmDto;
 import com.woori.wooribat.model.dto.farm.FarmFolderDto;
@@ -31,7 +35,7 @@ public class FarmController {
 	@Autowired
 	private FarmService farmService;
 
-	// ============= Farm Folder APIs =============
+	// ============= 폴더 =============
 
 	/**
 	 * 사용자의 모든 농지 폴더 조회
@@ -197,7 +201,7 @@ public class FarmController {
 		}
 	}
 
-	// ============= Farm APIs =============
+	// ============= 농지 =============
 
 	/**
 	 * 사용자의 모든 농지 조회
@@ -415,5 +419,52 @@ public class FarmController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
 	}
+	
+	/**
+	 * 농지 주소로 검색
+	 */
+	@GetMapping("/search")
+	@ResponseBody
+	public ResponseEntity<String> getFarmByAddress(@RequestParam("q") String address) {
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+
+			URI uri = UriComponentsBuilder
+					.fromUriString("https://api.vworld.kr/req/search")
+					.queryParam("service", "search")
+					.queryParam("request", "search")
+					.queryParam("version", "2.0")
+					.queryParam("type", "address")
+					.queryParam("category", "parcel")
+					.queryParam("query", address)
+					.queryParam("size", "10")
+					.queryParam("page", "1")
+					.queryParam("format", "json")
+					.queryParam("errorformat", "json")
+					.queryParam("crs", "EPSG:900913")
+					.queryParam("key", "8E952DFB-FFDE-33E3-BA8A-3D78FF78B6CC")
+					.build()
+					.encode()
+					.toUri();
+
+			System.out.println("VWorld API URL: " + uri.toString());
+
+			ResponseEntity<String> externalRes = restTemplate.getForEntity(uri, String.class);
+
+			return ResponseEntity
+					.status(externalRes.getStatusCode())
+					.body(externalRes.getBody());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity
+					.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("{\"success\":false,\"message\":\"주소 검색 중 오류가 발생했습니다: " + e.getMessage() + "\"}");
+		}
+	}
+
+	
+	
+	
 }
 

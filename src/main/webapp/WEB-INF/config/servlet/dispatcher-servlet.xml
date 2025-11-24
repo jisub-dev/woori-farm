@@ -35,23 +35,16 @@
 
 
 	<!-- 5. 인터셉터 설정 (로그인 체크) -->
-	<!-- <mvc:interceptors>
-		<mvc:interceptor> -->
-			<!-- 모든 경로에 대해 인터셉터 적용 -->
-			<!-- 개발 시 임시 인터셉터 해제 -->
-			<!-- <mvc:mapping path="/**"/> -->
-			
-			<!-- 로그인 관련 경로는 제외 -->
-			<!-- <mvc:exclude-mapping path="/login.do"/>
-			<mvc:exclude-mapping path="/oauth2/google.do"/>
-			<mvc:exclude-mapping path="/oauth2callback.do"/> -->
-			
-			
-			<!-- 정적 리소스 제외 -->
-			<!-- <mvc:exclude-mapping path="/resources/**"/> -->
-			<!-- <beans:bean class="com.woori.wooribat.cmm.interceptor.AuthInterceptor"/> -->
-		<!-- </mvc:interceptor>
-	</mvc:interceptors> -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<!-- 인증이 필요한 경로만 지정 -->
+			<mvc:mapping path="/gis.do"/>
+			<mvc:mapping path="/api/**"/>
+
+			<!-- 인터셉터 빈 -->
+			<beans:bean class="com.woori.wooribat.interceptor.AuthInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
 
 
 	<!--빈 이름은 무조건  multipartResolver -->

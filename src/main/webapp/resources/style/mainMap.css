@@ -1,8 +1,4 @@
-/* ========================================
-   우리밭 지도 - 네이버 지도 스타일 기반
-   ======================================== */
-
-/* 공통 Reset & Base */
+/* 공통 */
 * {
     margin: 0;
     padding: 0;
@@ -48,7 +44,7 @@ ul, ol {
 }
 
 /* ========================================
-   Skip Navigation
+   네비게이션
    ======================================== */
 .skip-nav {
     position: absolute;
@@ -71,7 +67,7 @@ ul, ol {
 }
 
 /* ========================================
-   Header - 왼쪽 사이드바 스타일
+   왼쪽 사이드 바
    ======================================== */
 .map-header {
     position: fixed;
@@ -112,7 +108,7 @@ ul, ol {
     letter-spacing: -0.5px;
 }
 
-/* Header Navigation */
+
 .header-nav {
     flex: 1;
     overflow-y: auto;
@@ -174,7 +170,10 @@ ul, ol {
     /* 항상 표시 */
 }
 
-/* Header User */
+/* 채널톡 위치 */
+
+
+/* 유저 */
 .header-user {
     padding: 12px;
     border-top: 1px solid #e4e8eb;
@@ -271,7 +270,7 @@ ul, ol {
 }
 
 /* ========================================
-   Main Layout
+   메인 레이아웃
    ======================================== */
 .app-layout {
     display: flex;
@@ -281,7 +280,7 @@ ul, ol {
 }
 
 /* ========================================
-   Left Panel
+  왼쪽 패널
    ======================================== */
 .panel-layout {
     position: relative;
@@ -303,10 +302,14 @@ ul, ol {
     height: 100%;
 }
 
-/* Search Input Box */
+/* 검색 영역*/
 .search-input-box {
     padding: 16px;
     border-bottom: 1px solid #e4e8eb;
+}
+
+.search-wrap {
+    position: relative;
 }
 
 .search-box {
@@ -330,6 +333,49 @@ ul, ol {
     height: 20px;
     margin-right: 12px;
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23888"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>') center / contain no-repeat;
+}
+
+/* 검색 결과 리스트 */
+.search-result-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 8px;
+    z-index: 1000;
+}
+
+.search-result-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item:hover {
+    background: #f8f8f8;
+}
+
+.search-result-title {
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.search-result-sub {
+    font-size: 12px;
+    color: #888;
 }
 
 .input-box {
@@ -423,7 +469,7 @@ ul, ol {
     border-color: #888;
 }
 
-/* Smart Around */
+/* 감싸기 */
 .smart-around {
     margin-top: 24px;
 }
@@ -510,7 +556,7 @@ ul, ol {
 }
 
 /* ========================================
-   Map Container
+   지도 컨테이너
    ======================================== */
 .base-map {
     /*position: relative;*/
@@ -524,7 +570,7 @@ ul, ol {
 }
 
 /* ========================================
-   Map Controls
+   지도 컨트롤
    ======================================== */
 .map-control-widget {
     position: absolute;
@@ -673,7 +719,7 @@ ul, ol {
     z-index: 1000;
 }
 
-/* Material Design Icons 스타일 */
+/* 아이콘 스타일 */
 .widget-button i.mdi,
 .btn-location i.mdi,
 .btn-widget-zoom i.mdi {
@@ -793,12 +839,12 @@ ul, ol {
 
 
 /* ========================================
-   Weather Floating Button
+  날씨 버튼
    ======================================== */
 .weather-floating-button {
     position: absolute;
     bottom: 24px;
-    right: 24px;
+    right: 124px;
     z-index: 10;
 }
 
@@ -834,7 +880,7 @@ ul, ol {
 }
 
 /* ========================================
-   Popup
+   팝업
    ======================================== */
 .ol-popup {
     position: absolute;
@@ -867,7 +913,7 @@ ul, ol {
 }
 
 /* ========================================
-   Responsive
+   응답
    ======================================== */
 @media (max-width: 768px) {
     .panel-layout {
@@ -887,7 +933,7 @@ ul, ol {
 }
 
 /* ========================================
-   Scrollbar Styling
+	스크롤
    ======================================== */
 .panel::-webkit-scrollbar {
     width: 6px;
@@ -907,7 +953,7 @@ ul, ol {
 }
 
 /* ========================================
-   Modal (농지 추가 모달)
+   농지추가 모달
    ======================================== */
 .modal-overlay {
     position: fixed;

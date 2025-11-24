@@ -24,14 +24,14 @@ public class GisController {
 
 	@Autowired
 	private FarmlandService farmlandService;
-	@GetMapping("/gis.do")
+	@GetMapping("/gis")
 	public String gismove() {
 		return "mainMap";
 	}
 	
 	// 연속지적도 WMS 레이어 (노란색)
 	@ResponseBody
-	@GetMapping("/gis/pnu.do")
+	@GetMapping("/gis/pnu")
 	public ResponseEntity<byte[]> loadPnuLayer(@RequestParam("BBOX") String bbox, @RequestParam("WIDTH") String width, @RequestParam("HEIGHT") String height) {
 		RestTemplate restTemplate = new RestTemplate();
 		URI uri = UriComponentsBuilder
@@ -62,7 +62,7 @@ public class GisController {
 	
 	// 연속지적도 WFS 선택시 정보 요청
 	@ResponseBody
-	@PostMapping(value = "/gis/pnufeat.do",
+	@PostMapping(value = "/gis/pnufeat",
 		    	 produces = "application/json; charset=UTF-8") // 응답 json 폰트 깨짐 방지
 	public String loadPnuFeatLayer(double x, double y) {
 
@@ -89,7 +89,7 @@ public class GisController {
 
 	// 농지 WMS 레이어 프록시
 	@ResponseBody
-	@GetMapping("/gis/farm.do")
+	@GetMapping("/gis/farm")
 	public ResponseEntity<byte[]> loadFarmLayer(
 			@RequestParam("BBOX") String bbox,
 			@RequestParam("WIDTH") String width,
@@ -142,7 +142,7 @@ public class GisController {
 	
 	// 농지 WFS 선택시 정보 요청 (DB 조회)
 	@ResponseBody
-	@PostMapping(value = "/gis/farmfeat.do",
+	@PostMapping(value = "/gis/farmfeat",
 		    	 produces = "application/json; charset=UTF-8")
 	public Map<String, Object> loadFarmFeatLayer(double x, double y) {
 
@@ -197,4 +197,5 @@ public class GisController {
 
 		return result;
 	}
+	
 }

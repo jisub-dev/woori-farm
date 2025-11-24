@@ -30,13 +30,13 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
 </head>
 <body>
-	<!-- Skip Navigation -->
+	<!-- 네비 스킵 -->
 	<div class="skip-nav">
 		<a href="#section_content">본문 바로가기</a>
 		<a href="#header">주 메뉴 바로가기</a>
 	</div>
 
-	<!-- Header -->
+	<!-- 왼쪽 헤더 -->
 	<header id="header" class="map-header">
 		<h1 class="logo">
 			<a href="<c:url value='/gis.do'/>">
@@ -45,7 +45,7 @@
 			</a>
 		</h1>
 
-		<!-- Navigation Menu -->
+		<!-- 왼쪽 메뉴 -->
 		<nav class="header-nav">
 			<ul class="nav-list">
 				<li class="nav-item active">
@@ -75,7 +75,7 @@
 			</ul>
 		</nav>
 
-		<!-- User Info -->
+		<!-- 유저 정보 -->
 		<div class="header-user">
 			<c:choose>
 				<c:when test="${not empty sessionScope.userName}">
@@ -86,8 +86,6 @@
 						<div class="user-dropdown">
 							<div class="dropdown-content">
 								<p class="user-email">${sessionScope.userEmail}</p>
-								<a href="#" class="dropdown-link">내 정보</a>
-								<a href="#" class="dropdown-link">설정</a>
 								<a href="<c:url value='/logout.do'/>" class="dropdown-link logout">로그아웃</a>
 							</div>
 						</div>
@@ -100,7 +98,7 @@
 		</div>
 	</header>
 
-	<!-- Main Layout -->
+	<!-- 메인 레이아웃 -->
 	<div class="app-layout">
 		<!-- Left Panel -->
 		<div class="panel-layout">
@@ -109,63 +107,24 @@
 				<div id="home_search_input_box" class="search-input-box">
 					<div class="search-wrap">
 						<div class="search-box">
-							<button type="button" class="button-search">검색</button>
+							<button type="button" class="button-search"></button>
 							<div class="input-box">
-								<label for="input_search" class="label-search">농지, 주소 검색</label>
+								<!-- <label for="input_search" class="label-search">농지, 주소 검색</label> -->
 								<input id="input_search" class="input-search" autocomplete="off"
 									   maxlength="255" type="text" placeholder="농지, 주소 검색">
 							</div>
 						</div>
+						<div id="search_results" class="search-result-list"></div>
 					</div>
 				</div>
 
-				<!-- Panel Content -->
+				<!-- 패널  -->
 				<div class="panel" id="section_content">
 					<!-- 지도 홈 패널 -->
 					<div class="panel-content" id="panel-map-home" style="display:none;">
 						<h2 class="blind">지도 홈</h2>
-
-						<!-- 공지사항 영역 (네이버 지도 스타일) -->
-						<!-- <div class="notice-area">
-							<h3 class="blind">공지사항</h3>
-							<div class="notice-list"> -->
-								<!-- 공지사항 내용 추가 예정 -->
-							<!-- </div>
-						</div> -->
-
-						<!-- 주소 표시 영역 -->
-						<!-- <div class="address-area">
-							<div class="address-content">
-								<button class="btn-address" type="button">군산시 나운동</button>
-								<button type="button" class="btn-report">오류신고</button>
-							</div>
-						</div> -->
-
-						<!-- Smart Around 영역 -->
-						<!-- <div class="smart-around">
-							<div class="around-wrap">
-								<h3 class="heading">
-									<span class="blind">주변 정보</span>
-								</h3>
-								<div class="around-content"> -->
-									<!-- 주변 농지 정보 -->
-									<!-- <div class="my-around">
-										<h3 class="my-around-heading">내 주변</h3>
-										<div class="my-around-filter">
-											<button type="button" class="btn-around-filter">
-												<strong class="point">전체</strong>
-												<span>필터</span>
-											</button>
-										</div> -->
-										<!-- 농지 카드 리스트 영역 -->
-										<!-- <div class="place-item-list"> -->
-											<!-- 동적으로 농지 카드가 추가될 영역 -->
-										<!-- </div>
-									</div>
-								</div>
-							</div>
-						</div>-->
 					</div>
+
 
 					<!-- 내 농지 패널 -->
 					<div class="panel-content" id="panel-my-farms" style="display:none;">
@@ -222,9 +181,9 @@
 			</div>
 		</div>
 
-		<!-- Map Container -->
+		<!-- 지도 컨테이너 -->
 		<div class="base-map">
-			<!-- Map Controls -->
+			<!-- 지도 컨트롤 -->
 			<div class="map-control-widget">
 				<!-- 지도 유형 선택 -->
 				<div class="item-carto">
@@ -250,7 +209,7 @@
 							<i class="mdi mdi-map-outline"></i>
 							<span class="blind">지적편집도 표시</span>
 						</button>
-						<button class="widget-button widget-click" id="chAddCadaClick" aria-pressed="false" title="지적편집도 클릭 조회 (줌 레벨 18 이상)">
+						<button class="widget-button widget-click" id="chAddCadaClick" aria-pressed="false" title="지적편집도 클릭 조회 (줌 레벨 17 이상)">
 							<i class="mdi mdi-cursor-default-click-outline"></i>
 							<span class="blind">지적편집도 클릭</span>
 						</button>
@@ -266,7 +225,7 @@
 							<i class="mdi mdi-tractor"></i>
 							<span class="blind">농지 표시</span>
 						</button>
-						<button class="widget-button widget-farm-click" id="chAddFarmClick" aria-pressed="false" title="농지 클릭 조회 (줌 레벨 15 이상)">
+						<button class="widget-button widget-farm-click" id="chAddFarmClick" aria-pressed="false" title="농지 클릭 조회 (줌 레벨 17 이상)">
 							<i class="mdi mdi-tractor-variant"></i>
 							<span class="blind">농지 클릭</span>
 						</button>
@@ -321,7 +280,7 @@
 		</div>
 	</div>
 
-	<!-- 날씨 플로팅 버튼 (네이버 지도 스타일) -->
+	<!-- 날씨 플로팅 버튼 -->
 	<div class="weather-floating-button">
 		<div role="button" tabindex="0" class="weather-btn">
 			<div class="weather-info-wrap">
@@ -371,7 +330,7 @@
 	<!-- 폴리곤 그리기 완료 확인 팝업 -->
 	<div id="polygon-confirm-popup" class="ol-popup" style="display:none;">
 		<div class="polygon-confirm-content">
-			<h4 style="margin:0 0 12px 0; font-size:16px; font-weight:600;">🌾 농지 등록</h4>
+			<h4 style="margin:0 0 12px 0; font-size:16px; font-weight:600;">농지 등록</h4>
 			<p style="margin:0 0 16px 0; color:#666; font-size:14px;">
 				그린 영역을 농지로 등록하시겠습니까?
 			</p>
@@ -594,7 +553,7 @@
 							</h5>
 							<ol class="guide-steps">
 								<li>오른쪽 지도 컨트롤에서 <i class="mdi mdi-cursor-default-click-outline"></i> <strong>지적편집도 클릭</strong> 버튼을 활성화합니다.</li>
-								<li>지도를 줌 레벨 18 이상으로 확대합니다.</li>
+								<li>지도를 줌 레벨 17 이상으로 확대합니다.</li>
 								<li>원하는 농지를 클릭하면 농지 추가 모달이 열립니다.</li>
 								<li>농지 이름과 폴더를 선택하고 저장합니다.</li>
 							</ol>
@@ -707,57 +666,13 @@
 					</div>
 				</div>
 
-				<!-- 팁과 요령 -->
-				<div class="guide-section">
-					<h4 class="guide-section-title">
-						<i class="mdi mdi-lightbulb"></i>
-						팁과 요령
-					</h4>
-					<div class="guide-content">
-						<div class="guide-tips">
-							<div class="guide-tip">
-								<i class="mdi mdi-check-circle"></i>
-								<span>농지 이름은 위치나 작물명을 포함하면 관리하기 쉽습니다. (예: 동쪽밭-벼, 서쪽밭-고추)</span>
-							</div>
-							<div class="guide-tip">
-								<i class="mdi mdi-check-circle"></i>
-								<span>폴더를 작물별, 지역별, 또는 용도별로 구분하면 효율적입니다.</span>
-							</div>
-							<div class="guide-tip">
-								<i class="mdi mdi-check-circle"></i>
-								<span>농지 상태를 주기적으로 업데이트하면 농작업 일정을 한눈에 파악할 수 있습니다.</span>
-							</div>
-							<div class="guide-tip">
-								<i class="mdi mdi-check-circle"></i>
-								<span>지도 유형을 위성지도로 변경하면 실제 농지 모습을 확인할 수 있습니다.</span>
-							</div>
-							<div class="guide-tip">
-								<i class="mdi mdi-check-circle"></i>
-								<span>측정 도구로 미리 면적을 확인한 후 농지를 등록하면 정확합니다.</span>
-							</div>
-						</div>
-					</div>
-				</div>
-
+				
 				<!-- 문의하기 -->
 				<div class="guide-section">
 					<h4 class="guide-section-title">
 						<i class="mdi mdi-face-agent"></i>
-						도움이 필요하신가요?
+						문의 사항은 지도 오른쪽 하단 채팅을 이용해주세요!
 					</h4>
-					<div class="guide-content">
-						<p>추가 문의사항이 있으시면 언제든지 연락 주세요:</p>
-						<div class="guide-contact">
-							<div class="guide-contact-item">
-								<i class="mdi mdi-email"></i>
-								<span>이메일: support@wooribat.com</span>
-							</div>
-							<div class="guide-contact-item">
-								<i class="mdi mdi-phone"></i>
-								<span>전화: 1588-0000</span>
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
