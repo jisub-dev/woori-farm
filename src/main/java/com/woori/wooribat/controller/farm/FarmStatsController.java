@@ -26,10 +26,9 @@ public class FarmStatsController {
     @GetMapping("/folders")
     @ResponseBody
     public ResponseEntity<?> getFolderStats(HttpSession session) {
-        String userId = (String) session.getAttribute("userId"); // varchar(100)
+        String userId = (String) session.getAttribute("userId");
         if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("success", false, "message", "로그인이 필요합니다."));
+            return ResponseEntity.ok(Map.of("success", false, "message", "로그인이 필요합니다."));
         }
 
         Map<String, Object> data = farmStatsService.getFolderStats(userId);
@@ -43,11 +42,9 @@ public class FarmStatsController {
     ) {
         String userId = (String) session.getAttribute("userId");
         if (userId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("success", false, "message", "로그인이 필요합니다."));
+            return ResponseEntity.ok(Map.of("success", false, "message", "로그인이 필요합니다."));
         }
 
-        // 미지정 폴더를 0 같은 값으로 보낼 경우 처리 예시
         Integer folderIdParam = (folderId != null && folderId == 0) ? null : folderId;
 
         Map<String, Object> data = farmStatsService.getFolderStatusStats(userId, folderIdParam);

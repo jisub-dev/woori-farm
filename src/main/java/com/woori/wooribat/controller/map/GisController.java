@@ -24,12 +24,12 @@ public class GisController {
 
 	@Autowired
 	private FarmlandService farmlandService;
+
 	@GetMapping("/gis")
 	public String gismove() {
 		return "mainMap";
 	}
-	
-	// 연속지적도 WMS 레이어 (노란색)
+
 	@ResponseBody
 	@GetMapping("/gis/pnu")
 	public ResponseEntity<byte[]> loadPnuLayer(@RequestParam("BBOX") String bbox, @RequestParam("WIDTH") String width, @RequestParam("HEIGHT") String height) {
@@ -59,11 +59,10 @@ public class GisController {
 	            .header("Content-Type", "image/png")
 	            .body(imageBytes);
 	}
-	
-	// 연속지적도 WFS 선택시 정보 요청
+
 	@ResponseBody
 	@PostMapping(value = "/gis/pnufeat",
-		    	 produces = "application/json; charset=UTF-8") // 응답 json 폰트 깨짐 방지
+		    	 produces = "application/json; charset=UTF-8")
 	public String loadPnuFeatLayer(double x, double y) {
 
 		RestTemplate restTemplate = new RestTemplate();
@@ -87,7 +86,6 @@ public class GisController {
 		return restTemplate.getForObject(uri, String.class);
 	}
 
-	// 농지 WMS 레이어 프록시
 	@ResponseBody
 	@GetMapping("/gis/farm")
 	public ResponseEntity<byte[]> loadFarmLayer(
@@ -97,32 +95,13 @@ public class GisController {
 
 		RestTemplate restTemplate = new RestTemplate();
 
-//		URI uri = UriComponentsBuilder
-//				.fromUriString("https://agis.epis.or.kr/ASD/farmmapApi/wms.do")
-//				.queryParam("service", "WMS")
-//				.queryParam("version", "1.3.0")
-//				.queryParam("request", "GetMap")
-//				.queryParam("layers", "farm_map_api")  // 레이어 이름 추가
-//				.queryParam("format", "image/png")
-//				.queryParam("transparent", "true")
-//				.queryParam("crs", "EPSG:3857")
-//				.queryParam("bbox", bbox)
-//				.queryParam("width", width)
-//				.queryParam("height", height)
-//				.queryParam("styles", "01")
-//				.queryParam("landcd", "01,02,03,04,06")  // 전, 답, 과수원, 목장용지, 임야
-//				.queryParam("apiKey", "HTdpzNArusU4rOroBv3g")
-//				.queryParam("domain", "http://127.0.0.1:8080")
-//				.encode()
-//				.build()
-//				.toUri();
 		URI uri = UriComponentsBuilder
-	            .fromUriString("http://localhost:9090/geoserver/board/wms") // ← 워크스페이스 이름에 맞게 수정
+	            .fromUriString("http://localhost:9090/geoserver/board/wms")
 	            .queryParam("service", "WMS")
 	            .queryParam("version", "1.1.0")
 	            .queryParam("request", "GetMap")
-	            .queryParam("layers", "board:farmland_master")  // ← GeoServer에서 확인한 이름으로 변경
-	            .queryParam("styles", "")                  // SLD 안 쓰면 빈 값
+	            .queryParam("layers", "board:farmland_master")
+	            .queryParam("styles", "")
 	            .queryParam("format", "image/png")
 	            .queryParam("transparent", "true")
 	            .queryParam("crs", "EPSG:3857")
@@ -139,8 +118,7 @@ public class GisController {
 				.header("Content-Type", "image/png")
 				.body(imageBytes);
 	}
-	
-	// 농지 WFS 선택시 정보 요청 (DB 조회)
+
 	@ResponseBody
 	@PostMapping(value = "/gis/farmfeat",
 		    	 produces = "application/json; charset=UTF-8")
@@ -149,7 +127,6 @@ public class GisController {
 		Map<String, Object> result = new HashMap<>();
 
 		try {
-			// DB에서 농지 조회
 			FarmlandDto farmland = farmlandService.getFarmlandByPoint(x, y);
 
 			if (farmland == null) {
@@ -158,7 +135,6 @@ public class GisController {
 				return result;
 			}
 
-			// DTO를 Map으로 변환 (properties용)
 			Map<String, Object> properties = new HashMap<>();
 			properties.put("id", farmland.getId());
 			properties.put("pnu", farmland.getPnu());
@@ -168,20 +144,17 @@ public class GisController {
 			properties.put("flAr", farmland.getFlAr());
 			properties.put("flightYmd", farmland.getFlightYmd());
 
-			// GeoJSON geometry 파싱
 			ObjectMapper objectMapper = new ObjectMapper();
 			Map<String, Object> geometry = objectMapper.readValue(
 				farmland.getGeomGeoJson(),
 				Map.class
 			);
 
-			// Feature 생성
 			Map<String, Object> feature = new HashMap<>();
 			feature.put("type", "Feature");
 			feature.put("geometry", geometry);
 			feature.put("properties", properties);
 
-			// FeatureCollection 생성
 			Map<String, Object> featureCollection = new HashMap<>();
 			featureCollection.put("type", "FeatureCollection");
 			featureCollection.put("features", Collections.singletonList(feature));
@@ -192,7 +165,7 @@ public class GisController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "ERROR");
-			result.put("message", "농지 조회 중 오류가 발생했습니다: " + e.getMessage());
+			result.put("message", "농지 조회 오류");
 		}
 
 		return result;

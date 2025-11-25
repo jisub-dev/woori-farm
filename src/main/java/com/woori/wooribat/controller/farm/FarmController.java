@@ -35,11 +35,7 @@ public class FarmController {
 	@Autowired
 	private FarmService farmService;
 
-	// ============= 폴더 =============
-
-	/**
-	 * 사용자의 모든 농지 폴더 조회
-	 */
+	// 폴더 목록
 	@GetMapping("/folders")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> getFarmFolders(HttpSession session) {
@@ -50,33 +46,33 @@ public class FarmController {
 			if (userId == null) {
 				response.put("success", false);
 				response.put("message", "로그인이 필요합니다.");
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+				return ResponseEntity.ok(response);
 			}
 
 			List<FarmFolderDto> folders = farmService.getFarmFolders(userId);
-			
-			// "미지정" 폴더의 농지 개수 계산 (folderId가 null인 농지 개수)
+
 			List<FarmDto> allFarms = farmService.getFarmsByUserId(userId);
-			long unassignedCount = allFarms.stream()
-					.filter(farm -> farm.getFolderId() == null)
-					.count();
-			
+			int unassignedCount = 0;
+			for (FarmDto farm : allFarms) {
+				if (farm.getFolderId() == null) {
+					unassignedCount++;
+				}
+			}
+
 			response.put("success", true);
 			response.put("data", folders);
-			response.put("unassignedCount", unassignedCount); // 미지정 폴더의 농지 개수
+			response.put("unassignedCount", unassignedCount);
 			return ResponseEntity.ok(response);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.put("success", false);
 			response.put("message", "폴더 조회에 실패했습니다.");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+			return ResponseEntity.ok(response);
 		}
 	}
 
-	/**
-	 * 특정 농지 폴더 조회
-	 */
+	// 폴더 상세
 	@GetMapping("/folders/{id}")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> getFarmFolderById(@PathVariable Integer id) {
@@ -87,7 +83,7 @@ public class FarmController {
 			if (folder == null) {
 				response.put("success", false);
 				response.put("message", "폴더를 찾을 수 없습니다.");
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+				return ResponseEntity.ok(response);
 			}
 
 			response.put("success", true);
@@ -98,13 +94,11 @@ public class FarmController {
 			e.printStackTrace();
 			response.put("success", false);
 			response.put("message", "폴더 조회에 실패했습니다.");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+			return ResponseEntity.ok(response);
 		}
 	}
 
-	/**
-	 * 농지 폴더 생성
-	 */
+	// 폴더 추가
 	@PostMapping("/folders")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> createFarmFolder(@RequestBody FarmFolderDto farmFolderDto,
@@ -116,7 +110,7 @@ public class FarmController {
 			if (userId == null) {
 				response.put("success", false);
 				response.put("message", "로그인이 필요합니다.");
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+				return ResponseEntity.ok(response);
 			}
 
 			farmFolderDto.setUserId(userId);
@@ -126,24 +120,22 @@ public class FarmController {
 				response.put("success", true);
 				response.put("message", "폴더가 생성되었습니다.");
 				response.put("data", farmFolderDto);
-				return ResponseEntity.status(HttpStatus.CREATED).body(response);
+				return ResponseEntity.ok(response);
 			} else {
 				response.put("success", false);
 				response.put("message", "폴더 생성에 실패했습니다.");
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+				return ResponseEntity.ok(response);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.put("success", false);
 			response.put("message", "폴더 생성에 실패했습니다.");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+			return ResponseEntity.ok(response);
 		}
 	}
 
-	/**
-	 * 농지 폴더 수정
-	 */
+	// 폴더 수정
 	@PutMapping("/folders/{id}")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> updateFarmFolder(@PathVariable Integer id,
@@ -161,20 +153,18 @@ public class FarmController {
 			} else {
 				response.put("success", false);
 				response.put("message", "폴더 수정에 실패했습니다.");
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+				return ResponseEntity.ok(response);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.put("success", false);
 			response.put("message", "폴더 수정에 실패했습니다.");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+			return ResponseEntity.ok(response);
 		}
 	}
 
-	/**
-	 * 농지 폴더 삭제
-	 */
+	// 폴더 삭제
 	@DeleteMapping("/folders/{id}")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> deleteFarmFolder(@PathVariable Integer id) {
@@ -190,22 +180,18 @@ public class FarmController {
 			} else {
 				response.put("success", false);
 				response.put("message", "폴더 삭제에 실패했습니다.");
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+				return ResponseEntity.ok(response);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.put("success", false);
 			response.put("message", "폴더 삭제에 실패했습니다.");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+			return ResponseEntity.ok(response);
 		}
 	}
 
-	// ============= 농지 =============
-
-	/**
-	 * 사용자의 모든 농지 조회
-	 */
+	// 농지 목록
 	@GetMapping("/farms")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> getFarmsByUserId(HttpSession session) {
@@ -216,7 +202,7 @@ public class FarmController {
 			if (userId == null) {
 				response.put("success", false);
 				response.put("message", "로그인이 필요합니다.");
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+				return ResponseEntity.ok(response);
 			}
 
 			List<FarmDto> farms = farmService.getFarmsByUserId(userId);
@@ -228,13 +214,11 @@ public class FarmController {
 			e.printStackTrace();
 			response.put("success", false);
 			response.put("message", "농지 조회에 실패했습니다.");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+			return ResponseEntity.ok(response);
 		}
 	}
 
-	/**
-	 * 폴더별 농지 조회
-	 */
+	// 폴더별 농지 조회
 	@GetMapping("/farms/folder/{folderId}")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> getFarmsByFolderId(@PathVariable Integer folderId) {
@@ -250,13 +234,11 @@ public class FarmController {
 			e.printStackTrace();
 			response.put("success", false);
 			response.put("message", "농지 조회에 실패했습니다.");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+			return ResponseEntity.ok(response);
 		}
 	}
 
-	/**
-	 * 특정 농지 조회
-	 */
+	// 농지 상세
 	@GetMapping("/farms/{id}")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> getFarmById(@PathVariable Integer id) {
@@ -267,7 +249,7 @@ public class FarmController {
 			if (farm == null) {
 				response.put("success", false);
 				response.put("message", "농지를 찾을 수 없습니다.");
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+				return ResponseEntity.ok(response);
 			}
 
 			response.put("success", true);
@@ -278,13 +260,11 @@ public class FarmController {
 			e.printStackTrace();
 			response.put("success", false);
 			response.put("message", "농지 조회에 실패했습니다.");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+			return ResponseEntity.ok(response);
 		}
 	}
 
-	/**
-	 * 농지 생성
-	 */
+	// 농지 추가
 	@PostMapping("/farms")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> createFarm(@RequestBody FarmDto farmDto, HttpSession session) {
@@ -295,7 +275,7 @@ public class FarmController {
 			if (userId == null) {
 				response.put("success", false);
 				response.put("message", "로그인이 필요합니다.");
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+				return ResponseEntity.ok(response);
 			}
 
 			farmDto.setUserId(userId);
@@ -305,24 +285,22 @@ public class FarmController {
 				response.put("success", true);
 				response.put("message", "농지가 생성되었습니다.");
 				response.put("data", farmDto);
-				return ResponseEntity.status(HttpStatus.CREATED).body(response);
+				return ResponseEntity.ok(response);
 			} else {
 				response.put("success", false);
 				response.put("message", "농지 생성에 실패했습니다.");
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+				return ResponseEntity.ok(response);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.put("success", false);
 			response.put("message", "농지 생성에 실패했습니다.");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+			return ResponseEntity.ok(response);
 		}
 	}
 
-	/**
-	 * 농지 수정
-	 */
+	// 농지 수정
 	@PutMapping("/farms/{id}")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> updateFarm(@PathVariable Integer id, @RequestBody FarmDto farmDto) {
@@ -339,20 +317,18 @@ public class FarmController {
 			} else {
 				response.put("success", false);
 				response.put("message", "농지 수정에 실패했습니다.");
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+				return ResponseEntity.ok(response);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.put("success", false);
 			response.put("message", "농지 수정에 실패했습니다.");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+			return ResponseEntity.ok(response);
 		}
 	}
 
-	/**
-	 * 농지 삭제 (논리 삭제)
-	 */
+	// 농지 삭제
 	@DeleteMapping("/farms/{id}")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> deleteFarm(@PathVariable Integer id) {
@@ -368,20 +344,18 @@ public class FarmController {
 			} else {
 				response.put("success", false);
 				response.put("message", "농지 삭제에 실패했습니다.");
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+				return ResponseEntity.ok(response);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.put("success", false);
 			response.put("message", "농지 삭제에 실패했습니다.");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+			return ResponseEntity.ok(response);
 		}
 	}
 
-	/**
-	 * 사용자가 직접 그린 농지 생성
-	 */
+	// 직접 그린 농지 추가
 	@PostMapping("/farms/drawn")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> createDrawnFarm(@RequestBody FarmDto farmDto, HttpSession session, @RequestHeader(value = "userId", required = false)String headerUserId) {
@@ -390,12 +364,12 @@ public class FarmController {
 		try {
 			String userId = (String) session.getAttribute("userId");
 			if (userId == null) {
-				userId = headerUserId;  // 개발용: 헤더에서도 받음
+				userId = headerUserId;
 			}
 			if (userId == null) {
 				response.put("success", false);
 				response.put("message", "로그인이 필요합니다.");
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+				return ResponseEntity.ok(response);
 			}
 
 			farmDto.setUserId(userId);
@@ -405,24 +379,22 @@ public class FarmController {
 				response.put("success", true);
 				response.put("message", "직접 그린 농지가 생성되었습니다.");
 				response.put("data", farmDto);
-				return ResponseEntity.status(HttpStatus.CREATED).body(response);
+				return ResponseEntity.ok(response);
 			} else {
 				response.put("success", false);
 				response.put("message", "농지 생성에 실패했습니다.");
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+				return ResponseEntity.ok(response);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.put("success", false);
 			response.put("message", "농지 생성에 실패했습니다: " + e.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+			return ResponseEntity.ok(response);
 		}
 	}
-	
-	/**
-	 * 농지 주소로 검색
-	 */
+
+	// 주소 검색
 	@GetMapping("/search")
 	@ResponseBody
 	public ResponseEntity<String> getFarmByAddress(@RequestParam("q") String address) {
@@ -447,7 +419,6 @@ public class FarmController {
 					.encode()
 					.toUri();
 
-			System.out.println("VWorld API URL: " + uri.toString());
 
 			ResponseEntity<String> externalRes = restTemplate.getForEntity(uri, String.class);
 
@@ -457,14 +428,8 @@ public class FarmController {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity
-					.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("{\"success\":false,\"message\":\"주소 검색 중 오류가 발생했습니다: " + e.getMessage() + "\"}");
+			return ResponseEntity.ok("{\"success\":false,\"message\":\"주소 검색 오류\"}");
 		}
 	}
-
-	
-	
-	
 }
 

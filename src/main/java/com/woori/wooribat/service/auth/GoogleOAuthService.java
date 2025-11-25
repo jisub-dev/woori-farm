@@ -40,9 +40,7 @@ public class GoogleOAuthService {
 	private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 	private static final JsonFactory JSON_FACTORY = new GsonFactory();
 
-	/**
-	 * Google OAuth 인증 URL 생성
-	 */
+	// 구글 인증 URL 생성
 	public String getAuthorizationUrl() {
 		AuthorizationCodeFlow flow = new AuthorizationCodeFlow.Builder(
 			BearerToken.authorizationHeaderAccessMethod(),
@@ -57,9 +55,7 @@ public class GoogleOAuthService {
 		return flow.newAuthorizationUrl().setRedirectUri(redirectUri).build();
 	}
 
-	/**
-	 * Authorization Code로 Access Token 교환
-	 */
+	// 액세스 토큰 발급
 	public TokenResponse getAccessToken(String code) throws IOException {
 		AuthorizationCodeFlow flow = new AuthorizationCodeFlow.Builder(
 			BearerToken.authorizationHeaderAccessMethod(),

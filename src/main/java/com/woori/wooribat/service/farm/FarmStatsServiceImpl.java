@@ -80,7 +80,7 @@ public class FarmStatsServiceImpl implements FarmStatsService{
     }
 
     private double round(double v) {
-        return Math.round(v * 10.0) / 10.0; // 소수 1자리
+        return Math.round(v * 10.0) / 10.0;
     }
 }
 

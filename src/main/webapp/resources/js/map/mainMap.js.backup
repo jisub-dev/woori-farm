@@ -136,9 +136,22 @@ function loadFarmFolders() {
 	const foldersList = document.getElementById('farm-folders-list');
 	// 세션 체크
 	if (!sessionUserId) {
-		alert('로그인이 필요합니다.');
+		foldersList.innerHTML = `
+					<div class="folder-loading">
+						<i class="mdi mdi-alert-circle"></i>
+						<span>로그인이 필요합니다.</span>
+					</div>
+				`;
 		return;
 	}
+
+	// 로딩 상태 표시
+	foldersList.innerHTML = `
+				<div class="folder-loading">
+					<i class="mdi mdi-loading mdi-spin"></i>
+					<span>폴더 목록을 불러오는 중...</span>
+				</div>
+			`;
 
 	fetch("/api/farm/folders.do", {
 		method: 'GET',
@@ -152,12 +165,22 @@ function loadFarmFolders() {
 			if (data.success) {
 				renderFolders(data.data, data.unassignedCount || 0);
 			} else {
-				  alert('폴더 목록을 불러올 수 없습니다.');
+				foldersList.innerHTML = `
+						<div class="folder-loading">
+							<i class="mdi mdi-alert-circle"></i>
+							<span>폴더 목록을 불러올 수 없습니다.</span>
+						</div>
+					`;
 			}
 		})
 		.catch(err => {
 			console.error('폴더 목록 로드 오류:', err);
-			  alert('서버 오류 발생');
+			foldersList.innerHTML = `
+						<div class="folder-loading">
+							<i class="mdi mdi-alert-circle"></i>
+							<span>서버 오류가 발생했습니다.</span>
+						</div>
+					`;
 		});
 }
 
@@ -240,12 +263,22 @@ window.showFarmsByFolder = function(folderId, folderName) {
 			if (data.success) {
 				renderFarms(data.data, folderId);
 			} else {
-				alert('농지 목록을 불러올 수 없습니다 ');
+				farmsList.innerHTML = `
+							<div class="farm-empty">
+								<i class="mdi mdi-alert-circle"></i>
+								<p>농지 목록을 불러올 수 없습니다.</p>
+							</div>
+						`;
 			}
 		})
 		.catch(err => {
 			console.error('농지 목록 로드 오류:', err);
-			alert('서버 오류 발생');
+			farmsList.innerHTML = `
+						<div class="farm-empty">
+							<i class="mdi mdi-alert-circle"></i>
+							<p>서버 오류가 발생했습니다.</p>
+						</div>
+					`;
 		});
 };
 
@@ -416,14 +449,21 @@ window.showFarmOnMap = function(farmId, event) {
 
 			// centerPoint로 지도 이동
 			if (farm.centerPoint) {
-				// WKT 파싱
+				// WKT POINT 형식 파싱: "POINT(x y)"
 				const pointMatch = farm.centerPoint.match(/POINT\(([^ ]+) ([^ ]+)\)/);
 				if (pointMatch) {
-				    const x = parseFloat(pointMatch[1]);
-				    const y = parseFloat(pointMatch[2]);
+					const x = parseFloat(pointMatch[1]);
+					const y = parseFloat(pointMatch[2]);
 
-				    // 좌표 변환
-				    const coords = ol.proj.fromLonLat([x, y]);
+					let coords;
+					// 좌표 범위로 좌표계 판단 (경위도: -180~180, -90~90 / 메르카토르: 매우 큰 값)
+					if (Math.abs(x) <= 180 && Math.abs(y) <= 90) {
+						// 경위도 좌표 (EPSG:4326) -> 메르카토르로 변환
+						coords = ol.proj.fromLonLat([x, y]);
+					} else {
+						// 이미 메르카토르 좌표 (EPSG:3857)
+						coords = [x, y];
+					}
 
 					// 지도 이동 및 줌
 					map.getView().animate({
@@ -2372,6 +2412,7 @@ $(document).ready(function() {
 
 			const title = document.createElement('div');
 			title.className = 'search-result-title';
+			// road(도로명) / parcel(지번) 혼합해서 들어오니까 label 보고 표시
 			const mainAddr = item.address?.road ?? item.address?.parcel ?? item.title;
 			title.textContent = mainAddr.replace(/<[^>]+>/g, ''); // 태그 제거
 

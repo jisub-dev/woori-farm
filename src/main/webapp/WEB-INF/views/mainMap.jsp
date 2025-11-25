@@ -18,9 +18,7 @@
 
 	<!-- 세션 정보를 JavaScript로 전달 -->
 	<script type="text/javascript">
-		// 세션에서 userId 가져오기
 		var sessionUserId = '<c:out value="${sessionScope.userId}" default=""/>';
-		console.log('Session User ID:', sessionUserId);
 	</script>
 
 	<script src="<c:url value='/resources/js/map/mainMap.js'/>"></script>
@@ -33,12 +31,6 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
 </head>
 <body>
-	<!-- 네비 스킵 -->
-	<div class="skip-nav">
-		<a href="#section_content">본문 바로가기</a>
-		<a href="#header">주 메뉴 바로가기</a>
-	</div>
-
 	<!-- 왼쪽 헤더 -->
 	<header id="header" class="map-header">
 		<h1 class="logo">
@@ -112,9 +104,7 @@
 						<div class="search-box">
 							<button type="button" class="button-search"></button>
 							<div class="input-box">
-								<!-- <label for="input_search" class="label-search">농지, 주소 검색</label> -->
-								<input id="input_search" class="input-search" autocomplete="off"
-									   maxlength="255" type="text" placeholder="농지, 주소 검색">
+								<input id="input_search" class="input-search" type="text" placeholder="농지, 주소 검색">
 							</div>
 						</div>
 						<div id="search_results" class="search-result-list"></div>
@@ -148,7 +138,7 @@
 						<!-- 폴더 목록 영역 -->
 						<div class="farm-folders-area">
 							<div id="farm-folders-list" class="farm-folders-list">
-								<!-- 폴더 목록이 동적으로 추가됩니다 -->
+								<!-- 폴더 목록 -->
 								<div class="folder-loading">
 									<i class="mdi mdi-loading mdi-spin"></i>
 									<span>폴더 목록을 불러오는 중...</span>
@@ -171,7 +161,7 @@
 								</button>
 							</div>
 							<div id="farms-list" class="farms-list">
-								<!-- 농지 목록이 동적으로 추가됩니다 -->
+								<!-- 농지 목록 -->
 							</div>
 						</div>
 					</div>
@@ -283,23 +273,6 @@
 		</div>
 	</div>
 
-	<!-- 날씨 플로팅 버튼 -->
-	<!-- <div class="weather-floating-button">
-		<div role="button" tabindex="0" class="weather-btn">
-			<div class="weather-info-wrap">
-				<div class="weather-info-area">
-					<span class="weather-icon">
-						<span class="blind">맑음</span>
-					</span>
-					<span class="weather-info-temperature">
-						<span id="current-temp">--</span>°
-						<span class="blind">기온</span>
-					</span>
-				</div>
-			</div>
-		</div>
-	</div> -->
-
 	<!-- 농지 추가 모달 (지도에서 선택) -->
 	<div id="farmland-add-modal" class="modal-overlay" style="display:none;">
 		<div class="modal-container">
@@ -313,13 +286,13 @@
 			<div class="modal-body">
 				<div class="form-group">
 					<label for="farmland-name" class="form-label">농지 이름 <span class="required">*</span></label>
-					<input type="text" id="farmland-name" class="form-input" placeholder="농지 이름을 입력하세요" maxlength="50">
+					<input type="text" id="farmland-name" class="form-input" placeholder="농지 이름을 입력하세요">
 				</div>
 				<div class="form-group">
 					<label for="farmland-folder" class="form-label">폴더 선택</label>
 					<select id="farmland-folder" class="form-select">
 						<option value="">미지정</option>
-						<!-- 폴더 목록이 동적으로 추가됩니다 -->
+						<!-- js에서 추가 -->
 					</select>
 				</div>
 			</div>
@@ -366,13 +339,13 @@
 			<div class="modal-body">
 				<div class="form-group">
 					<label for="drawn-farmland-name" class="form-label">농지 이름 <span class="required">*</span></label>
-					<input type="text" id="drawn-farmland-name" class="form-input" placeholder="농지 이름을 입력하세요" maxlength="50">
+					<input type="text" id="drawn-farmland-name" class="form-input" placeholder="농지 이름을 입력하세요">
 				</div>
 				<div class="form-group">
 					<label for="drawn-farmland-folder" class="form-label">폴더 선택</label>
 					<select id="drawn-farmland-folder" class="form-select">
 						<option value="">미지정</option>
-						<!-- 폴더 목록이 동적으로 추가됩니다 -->
+						<!-- js에서 추가 -->
 					</select>
 				</div>
 				<div class="form-group">
@@ -539,11 +512,11 @@
 						시작하기
 					</h4>
 					<div class="guide-content">
-						<p>우리밭에 오신 것을 환영합니다! 우리밭은 농지를 효율적으로 관리하고 시각화하는 스마트 농업 관리 시스템입니다.</p>
+						<p>농지 관리 시스템입니다. 지도에서 농지 보고 관리할 수 있어요.</p>
 						<ul class="guide-list">
-							<li><strong>지도 기반 관리:</strong> 실제 농지를 지도에서 직접 확인하고 관리할 수 있습니다.</li>
-							<li><strong>폴더 구조:</strong> 농지를 폴더별로 분류하여 체계적으로 관리할 수 있습니다.</li>
-							<li><strong>실시간 통계:</strong> 농지 면적, 개수 등을 실시간으로 확인할 수 있습니다.</li>
+							<li>지도로 농지 위치 확인하고 등록</li>
+							<li>폴더로 농지 분류해서 정리</li>
+							<li>통계로 면적이랑 개수 확인</li>
 						</ul>
 					</div>
 				</div>
@@ -558,27 +531,27 @@
 						<div class="guide-method">
 							<h5 class="guide-method-title">
 								<i class="mdi mdi-numeric-1-circle"></i>
-								지적편집도에서 선택하기
+								지적편집도에서 선택
 							</h5>
 							<ol class="guide-steps">
-								<li>오른쪽 지도 컨트롤에서 <i class="mdi mdi-cursor-default-click-outline"></i> <strong>지적편집도 클릭</strong> 버튼을 활성화합니다.</li>
-								<li>지도를 줌 레벨 17 이상으로 확대합니다.</li>
-								<li>원하는 농지를 클릭하면 농지 추가 모달이 열립니다.</li>
-								<li>농지 이름과 폴더를 선택하고 저장합니다.</li>
+								<li>오른쪽에 <i class="mdi mdi-cursor-default-click-outline"></i> 지적편집도 클릭 버튼 켜기</li>
+								<li>지도 많이 확대하기 (줌 레벨 17 이상)</li>
+								<li>농지 클릭하면 추가 창 뜸</li>
+								<li>이름이랑 폴더 선택하고 저장</li>
 							</ol>
 						</div>
 
 						<div class="guide-method">
 							<h5 class="guide-method-title">
 								<i class="mdi mdi-numeric-2-circle"></i>
-								직접 그려서 등록하기
+								직접 그려서 등록
 							</h5>
 							<ol class="guide-steps">
-								<li>오른쪽 지도 컨트롤에서 <i class="mdi mdi-draw"></i> <strong>농지 그리기</strong> 버튼을 클릭합니다.</li>
-								<li>지도에서 클릭하여 농지 경계를 그립니다.</li>
-								<li>더블클릭으로 그리기를 완료합니다.</li>
-								<li>확인 팝업에서 면적을 확인하고 <strong>농지 추가</strong>를 클릭합니다.</li>
-								<li>농지 정보를 입력하고 저장합니다.</li>
+								<li><i class="mdi mdi-draw"></i> 농지 그리기 버튼 누르기</li>
+								<li>지도에서 클릭해서 경계선 그리기</li>
+								<li>더블클릭하면 완료됨</li>
+								<li>팝업에서 면적 확인하고 농지 추가 누르기</li>
+								<li>정보 입력하고 저장</li>
 							</ol>
 						</div>
 					</div>
@@ -592,10 +565,10 @@
 					</h4>
 					<div class="guide-content">
 						<ul class="guide-list">
-							<li><strong>폴더 추가:</strong> 상단 <i class="mdi mdi-folder-plus"></i> <strong>폴더 추가</strong> 버튼을 클릭하여 새 폴더를 만들 수 있습니다.</li>
-							<li><strong>폴더 수정:</strong> 폴더 카드의 편집 버튼 <i class="mdi mdi-pencil"></i>을 클릭하여 폴더명을 변경할 수 있습니다.</li>
-							<li><strong>폴더 삭제:</strong> 삭제 버튼 <i class="mdi mdi-delete"></i>을 클릭하면 폴더를 삭제할 수 있습니다. (폴더 내 농지는 미지정으로 이동됩니다)</li>
-							<li><strong>폴더 보기:</strong> 폴더 카드를 클릭하면 해당 폴더의 농지 목록을 볼 수 있습니다.</li>
+							<li>폴더 추가: 위에 <i class="mdi mdi-folder-plus"></i> 버튼 누르면 됨</li>
+							<li>폴더 수정: <i class="mdi mdi-pencil"></i> 연필 버튼으로 이름 바꾸기</li>
+							<li>폴더 삭제: <i class="mdi mdi-delete"></i> 휴지통 버튼 (안에 농지는 미지정으로 감)</li>
+							<li>폴더 열기: 폴더 카드 누르면 안에 농지 목록 나옴</li>
 						</ul>
 					</div>
 				</div>
@@ -613,7 +586,7 @@
 									<i class="mdi mdi-map-outline"></i>
 								</div>
 								<h5>지적편집도</h5>
-								<p>실제 필지 경계를 지도에 표시합니다. 줌 레벨 17 이상에서 활성화됩니다.</p>
+								<p>땅 경계선 보여줌. 많이 확대해야 나타남 (줌 17 이상)</p>
 							</div>
 
 							<div class="guide-feature">
@@ -621,7 +594,7 @@
 									<i class="mdi mdi-tractor"></i>
 								</div>
 								<h5>농지 레이어</h5>
-								<p>등록된 모든 농지를 지도에 표시합니다. 클릭하면 상세 정보를 확인할 수 있습니다.</p>
+								<p>등록한 농지 전부 지도에 표시. 클릭하면 정보 나옴</p>
 							</div>
 
 							<div class="guide-feature">
@@ -629,7 +602,7 @@
 									<i class="mdi mdi-ruler"></i>
 								</div>
 								<h5>거리/면적 측정</h5>
-								<p>지도에서 직접 거리와 면적을 측정할 수 있습니다.</p>
+								<p>지도에서 거리랑 면적 재는 기능</p>
 							</div>
 
 							<div class="guide-feature">
@@ -637,7 +610,7 @@
 									<i class="mdi mdi-cursor-default-outline"></i>
 								</div>
 								<h5>마우스 호버</h5>
-								<p>마우스를 올리면 지적편집도 정보를 미리 볼 수 있습니다.</p>
+								<p>마우스 올리면 정보 미리보기</p>
 							</div>
 						</div>
 					</div>
@@ -651,10 +624,10 @@
 					</h4>
 					<div class="guide-content">
 						<ul class="guide-list">
-							<li><strong>상태 변경:</strong> 농지 카드에서 상태 드롭다운을 클릭하여 농지의 현재 상태(씨뿌림, 모내기, 성장중, 수확완료, 휴경)를 변경할 수 있습니다.</li>
-							<li><strong>폴더 이동:</strong> 농지를 다른 폴더로 이동하거나 미지정 상태로 변경할 수 있습니다.</li>
-							<li><strong>농지 삭제:</strong> 더 이상 필요하지 않은 농지는 삭제할 수 있습니다.</li>
-							<li><strong>지도에서 보기:</strong> <i class="mdi mdi-map-marker"></i> 버튼을 클릭하면 해당 농지 위치로 지도가 이동합니다.</li>
+							<li>상태 변경: 농지 카드에서 드롭다운으로 씨뿌림, 모내기, 성장중, 수확완료, 휴경 선택</li>
+							<li>폴더 이동: 다른 폴더로 옮기거나 미지정으로 변경 가능</li>
+							<li>농지 삭제: 필요없으면 삭제</li>
+							<li>위치 보기: <i class="mdi mdi-map-marker"></i> 버튼 누르면 지도에서 그 위치로 이동</li>
 						</ul>
 					</div>
 				</div>
@@ -666,11 +639,11 @@
 						통계 확인
 					</h4>
 					<div class="guide-content">
-						<p>상단 메뉴의 <strong>통계</strong>를 클릭하면 다음 정보를 확인할 수 있습니다:</p>
+						<p>위에 메뉴에서 통계 누르면:</p>
 						<ul class="guide-list">
-							<li><strong>전체 통계:</strong> 총 농지 개수와 전체 면적을 한눈에 확인</li>
-							<li><strong>폴더별 통계:</strong> 각 폴더의 농지 개수, 면적, 비율을 비교</li>
-							<li><strong>상태별 통계:</strong> 폴더별로 농지 상태 분포를 확인</li>
+							<li>전체 농지 개수랑 면적 나옴</li>
+							<li>폴더별로 개수, 면적, 비율 비교 가능</li>
+							<li>폴더 선택하면 상태별로 분포 볼 수 있음</li>
 						</ul>
 					</div>
 				</div>

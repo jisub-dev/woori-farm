@@ -19,9 +19,7 @@ public class GoogleUserService {
 	@Value("${google.user.info.uri}")
 	private String userInfoUri;
 
-	/**
-	 * Access Token으로 사용자 정보 조회
-	 */
+	// 유저 정보 가져오기
 	public JsonNode getUserInfo(String accessToken) throws IOException {
 		HttpClient httpClient = HttpClientBuilder.create().build();
 		HttpGet httpGet = new HttpGet(userInfoUri);

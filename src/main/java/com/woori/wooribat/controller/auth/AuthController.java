@@ -11,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.api.client.auth.oauth2.TokenResponse;
-import com.woori.wooribat.model.dto.auth.SignupRequestDto;
 import com.woori.wooribat.service.auth.GoogleOAuthService;
 import com.woori.wooribat.service.auth.GoogleUserService;
 
@@ -24,26 +23,20 @@ public class AuthController {
 	@Autowired
 	private GoogleUserService googleUserService;
 
-	/**
-	 * 로그인 페이지 (Google OAuth만 사용)
-	 */
+	// 로그인 페이지
 	@GetMapping("/login.do")
 	public String login() {
 		return "auth/login";
 	}
 
-	/**
-	 * Google OAuth 로그인 시작
-	 */
+	// 구글 로그인
 	@GetMapping("/oauth2/google.do")
 	public String googleLogin() {
 		String authUrl = googleOAuthService.getAuthorizationUrl();
 		return "redirect:" + authUrl;
 	}
 
-	/**
-	 * Google OAuth 콜백 처리
-	 */
+	// 구글 로그인 콜백
 	@GetMapping("/oauth2callback.do")
 	public ModelAndView oauth2Callback(@RequestParam("code") String code, HttpSession session) {
 		ModelAndView mav = new ModelAndView();
@@ -80,9 +73,7 @@ public class AuthController {
 		return mav;
 	}
 
-	/**
-	 * 로그아웃
-	 */
+	// 로그아웃
 	@GetMapping("/logout.do")
 	public String logout(HttpSession session) {
 		session.invalidate();

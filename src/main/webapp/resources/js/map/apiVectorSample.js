@@ -239,7 +239,6 @@ function initMap(){
 		const coord4326 = ol.proj.transform([mx, my], 'EPSG:5179', 'EPSG:4326');
 		const [lon, lat] = coord4326;
 
-		console.log("요청 좌표 (4326):", lon, lat);
 
 		const zoom = baseMap.getView().getZoom();
 		if (zoom >= 8) {
@@ -250,14 +249,12 @@ function initMap(){
 			})
 				.then(res => res.json())
 				.then(data => {
-					//console.log("응답 상태:", data.response.status);
 
 					const featureCollection = data.response.result.featureCollection; // GeoJson 형식 파싱 
 					if (!featureCollection) {
 						console.warn("featureCollection 없음:", data);
 						return;
 					} else {
-						console.log("잘 보내고 있음 ");
 					}
 
 					const format = new ol.format.GeoJSON();
@@ -294,7 +291,6 @@ function initMap(){
 		const coord4326 = ol.proj.transform([mx, my], 'EPSG:5179', 'EPSG:4326');
 		const [lon, lat] = coord4326;
 
-		console.log("요청 좌표 (4326):", lon, lat);
 
 		const zoom = baseMap.getView().getZoom();
 		if (zoom >= 8) {
@@ -305,7 +301,6 @@ function initMap(){
 			})
 				.then(res => res.json())
 				.then(data => {
-					console.log("응답 상태:", data.response.status);
 
 					const featureCollection = data.response.result.featureCollection; // GeoJson 형식 파싱 
 					const format = new ol.format.GeoJSON();
@@ -317,7 +312,6 @@ function initMap(){
 					selectCadastreFeatLayer.getSource().clear(); // 이전 폴리곤 지우고 
 					selectCadastreFeatLayer.getSource().addFeatures(features); // 그리고 
 					selectCadastreFeatLayer.setVisible(true); // 보이게 하고 
-					console.log("그렸");
 					
 					// json 응답 파싱 
 					const props = data.response.result.featureCollection.features[0].properties; //properties가 features 배열 안에 있음 
