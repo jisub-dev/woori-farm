@@ -121,5 +121,10 @@
 	<error-page><error-code>500</error-code>
 		<location>/WEB-INF/views/common/error500.jsp</location>
 	</error-page>-->
-		
+
+	<!-- 세션 타임아웃 설정 (30분) -->
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+
 </web-app>

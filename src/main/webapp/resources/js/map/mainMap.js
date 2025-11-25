@@ -518,7 +518,7 @@ window.showFarmOnMap = function(farmId, event) {
 					// 지도 이동 및 줌
 					map.getView().animate({
 						center: coords,
-						zoom: 17,
+						zoom: 18,
 						duration: 500
 					});
 				}

@@ -15,6 +15,10 @@
 	
 	<typeAliases>
 	  <package name="com.woori.wooribat.model.dto"/>
+	  <package name="com.woori.wooribat.model.dto.auth"/>
+	  <package name="com.woori.wooribat.model.dto.farm"/>
+	  <package name="com.woori.wooribat.model.dto.map"/>
+	  <package name="com.woori.wooribat.model.dto.user"/>
 	</typeAliases>
 			
 
