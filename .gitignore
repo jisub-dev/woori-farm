@@ -1,0 +1,13 @@
+target/
+.classpath
+.project
+.settings/
+.factorypath
+*.class
+.DS_Store
+*.properties
+src/main/webapp/resources/js/ol/
+bin/
+target/
+*.war
+.idea/

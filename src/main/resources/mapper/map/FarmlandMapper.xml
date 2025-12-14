@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.woori.wooribat.mapper.map.FarmlandMapper">
+
+	<!-- 클릭한 좌표에 해당하는 농지 조회 -->
+	<select id="selectFarmlandByPoint" resultType="com.woori.wooribat.model.dto.map.FarmlandDto">
+		SELECT
+			id,
+			pnu,
+			land_cd AS landCd,
+			land_cd_nm AS landCdNm,
+			stdg_cd AS stdgCd,
+			stdg_addr AS stdgAddr,
+			fl_ar AS flAr,
+			cad_con_cn AS cadConCn,
+			flight_ymd AS flightYmd,
+			updt_ymd AS updtYmd,
+			src_sys AS srcSys,
+			ST_AsGeoJSON(geom) AS geomGeoJson
+		FROM farm.farmland_master
+		WHERE ST_Contains(
+			geom,
+			ST_SetSRID(ST_Point(#{x}, #{y}), 3857)
+		)
+		ORDER BY flight_ymd DESC, id DESC
+		LIMIT 1
+	</select>
+
+</mapper>

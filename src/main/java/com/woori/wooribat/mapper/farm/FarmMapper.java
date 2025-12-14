@@ -1,0 +1,29 @@
+package com.woori.wooribat.mapper.farm;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import com.woori.wooribat.model.dto.farm.FarmDto;
+import com.woori.wooribat.model.dto.farm.FarmFolderDto;
+
+@Mapper
+public interface FarmMapper {
+
+	// 폴더
+	List<FarmFolderDto> getFarmFolders(@Param("userId") String userId);
+	FarmFolderDto getFarmFolderById(@Param("id") Integer id);
+	int insertFarmFolder(FarmFolderDto farmFolderDto);
+	int updateFarmFolder(FarmFolderDto farmFolderDto);
+	int deleteFarmFolder(@Param("id") Integer id);
+
+	// 농지
+	List<FarmDto> getFarmsByUserId(@Param("userId") String userId);
+	List<FarmDto> getFarmsByFolderId(@Param("folderId") Integer folderId);
+	FarmDto getFarmById(@Param("id") Integer id);
+	int insertFarm(FarmDto farmDto);
+	int insertDrawnFarm(FarmDto farmDto); // 사용자가 직접 그린 농지
+	int updateFarm(FarmDto farmDto);
+	int deleteFarm(@Param("id") Integer id);
+}
