@@ -37,7 +37,7 @@ public class AuthController {
 	}
 
 	// 구글 로그인 콜백
-	@GetMapping("/oauth2callback.do")
+	@GetMapping("/oauth2callback")
 	public ModelAndView oauth2Callback(@RequestParam("code") String code, HttpSession session) {
 		ModelAndView mav = new ModelAndView();
 

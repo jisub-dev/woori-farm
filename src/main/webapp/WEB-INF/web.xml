@@ -85,6 +85,7 @@
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>*.do</url-pattern>
+		<url-pattern>/oauth2callback</url-pattern>
 	</servlet-mapping>
  
 	<servlet-mapping>

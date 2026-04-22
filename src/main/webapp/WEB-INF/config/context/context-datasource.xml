@@ -7,7 +7,7 @@
 		<!-- 연구실 원격 DB 연결 설정  -->
 		<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
 			<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" /> <!-- sql 쿼리 조회 드라이버 log4jdbc -->
-			<property name="url" value="jdbc:log4jdbc:postgresql://localhost:15432/postgres" />
+			<property name="url" value="jdbc:log4jdbc:postgresql://woori-db:5432/woorifarm" />
 			<property name="username" value="postgres" />
 			<property name="password" value="0000" />
 		</bean>
