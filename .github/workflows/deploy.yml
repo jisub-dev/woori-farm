@@ -16,7 +16,7 @@ jobs:
           docker run --rm \
             -v ${{ github.workspace }}:/app \
             -w /app \
-            maven:3.9-openjdk-8 \
+            maven:3.8-openjdk-8 \
             mvn package -DskipTests
 
       - name: Deploy WAR
