@@ -28,19 +28,19 @@ public class AuthController {
 	public String root(HttpSession session) {
 		Boolean isLoggedIn = (Boolean) session.getAttribute("isLoggedIn");
 		if (Boolean.TRUE.equals(isLoggedIn)) {
-			return "redirect:/gis.do";
+			return "redirect:/gis";
 		}
-		return "redirect:/login.do";
+		return "redirect:/login";
 	}
 
 	// 로그인 페이지
-	@GetMapping("/login.do")
+	@GetMapping("/login")
 	public String login() {
 		return "auth/login";
 	}
 
 	// 구글 로그인
-	@GetMapping("/oauth2/google.do")
+	@GetMapping("/oauth2/google")
 	public String googleLogin() {
 		String authUrl = googleOAuthService.getAuthorizationUrl();
 		return "redirect:" + authUrl;
@@ -72,11 +72,11 @@ public class AuthController {
 			session.setAttribute("isLoggedIn", true);
 
 			// 4. 메인 페이지로 리다이렉트
-			mav.setViewName("redirect:/gis.do");
+			mav.setViewName("redirect:/gis");
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			mav.setViewName("redirect:/login.do");
+			mav.setViewName("redirect:/login");
 			mav.addObject("error", "Google 로그인에 실패했습니다.");
 		}
 
@@ -84,9 +84,9 @@ public class AuthController {
 	}
 
 	// 로그아웃
-	@GetMapping("/logout.do")
+	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
-		return "redirect:/login.do";
+		return "redirect:/login";
 	}
 }

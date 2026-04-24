@@ -38,7 +38,7 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<!-- 인증이 필요한 경로만 지정 -->
-			<mvc:mapping path="/gis.do"/>
+			<mvc:mapping path="/gis"/>
 			<mvc:mapping path="/api/**"/>
 
 			<!-- 인터셉터 빈 -->

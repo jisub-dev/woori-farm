@@ -26,7 +26,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 				return false;
 			}
 
-			response.sendRedirect(request.getContextPath() + "/login.do");
+			response.sendRedirect(request.getContextPath() + "/login");
 			return false;
 		}
 

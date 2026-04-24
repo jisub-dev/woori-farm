@@ -34,7 +34,7 @@
 	<!-- 왼쪽 헤더 -->
 	<header id="header" class="map-header">
 		<h1 class="logo">
-			<a href="<c:url value='/gis.do'/>">
+			<a href="<c:url value='/gis'/>">
 				<span class="logo-icon">🌾</span>
 				<span class="logo-text">우리밭</span>
 			</a>
@@ -81,13 +81,13 @@
 						<div class="user-dropdown">
 							<div class="dropdown-content">
 								<p class="user-email">${sessionScope.userEmail}</p>
-								<a href="<c:url value='/logout.do'/>" class="dropdown-link logout">로그아웃</a>
+								<a href="<c:url value='/logout'/>" class="dropdown-link logout">로그아웃</a>
 							</div>
 						</div>
 					</div>
 				</c:when>
 				<c:otherwise>
-					<a href="<c:url value='/login.do'/>" class="login-btn">로그인</a>
+					<a href="<c:url value='/login'/>" class="login-btn">로그인</a>
 				</c:otherwise>
 			</c:choose>
 		</div>

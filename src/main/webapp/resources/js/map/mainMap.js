@@ -44,7 +44,7 @@ $(document).ready(function() {
 		var folderName = prompt('폴더 이름을 입력하세요');
 		if (!folderName) return;
 
-		fetch('/api/farm/folders.do', {
+		fetch('/api/farm/folders', {
 			method: 'POST',
 			credentials: 'include',
 			headers: { 'Content-Type': 'application/json' },
@@ -140,7 +140,7 @@ function loadFarmFolders() {
 		return;
 	}
 
-	fetch("/api/farm/folders.do", {
+	fetch("/api/farm/folders", {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
@@ -226,7 +226,7 @@ window.showFarmsByFolder = function(folderId, folderName) {
 			`;
 
 	// API 호출
-	const url = folderId ? `/api/farm/farms/folder/${folderId}.do` : `/api/farm/farms.do`;
+	const url = folderId ? `/api/farm/farms/folder/${folderId}` : `/api/farm/farms`;
 
 	fetch(url, {
 		method: 'GET',
@@ -318,7 +318,7 @@ function renderFarms(farms, folderId) {
 window.deleteFarm = function(farmId, event) {
 	event.stopPropagation();
 	if (confirm('삭제하시겠습니까?')) {
-		fetch(`/api/farm/farms/${farmId}.do`, {
+		fetch(`/api/farm/farms/${farmId}`, {
 			method: 'DELETE',
 			credentials: 'include'
 		})
@@ -370,7 +370,7 @@ function showAllFarms() {
 				</div>
 			`;
 
-	fetch('/api/farm/farms.do', {
+	fetch('/api/farm/farms', {
 		method: 'GET',
 		credentials: 'include',
 		headers: { "Content-Type": "application/json" }
@@ -400,7 +400,7 @@ window.showFarmOnMap = function(farmId, event) {
 	}
 
 	// 농지 상세 정보 가져오기
-	fetch(`/api/farm/farms/${farmId}.do`, {
+	fetch(`/api/farm/farms/${farmId}`, {
 		method: 'GET',
 		credentials: 'include',
 		headers: { 'Content-Type': 'application/json' }
@@ -477,7 +477,7 @@ window.closeStatusModal = function() {
 window.saveStatus = function() {
 	const newStatus = document.getElementById('status-select').value;
 
-	fetch(`/api/farm/farms/${currentStatusFarmId}.do`, {
+	fetch(`/api/farm/farms/${currentStatusFarmId}`, {
 		method: 'PUT',
 		credentials: 'include',
 		headers: { 'Content-Type': 'application/json' },
@@ -519,7 +519,7 @@ window.changeFarmFolder = function(farmId, farmName, event) {
 
 	currentFolderChangeFarmId = farmId;
 
-	fetch('/api/farm/folders.do', {
+	fetch('/api/farm/folders', {
 		method: 'GET',
 		credentials: 'include'
 	})
@@ -551,7 +551,7 @@ window.saveFolder = function() {
 	const newFolderId = document.getElementById('folder-select').value || null;
 	const newFolderIdNum = newFolderId ? parseInt(newFolderId) : null;
 
-	fetch(`/api/farm/farms/${currentFolderChangeFarmId}.do`, {
+	fetch(`/api/farm/farms/${currentFolderChangeFarmId}`, {
 		method: 'PUT',
 		credentials: 'include',
 		headers: { 'Content-Type': 'application/json' },
@@ -629,7 +629,7 @@ $(document).ready(function() {
 		var newName = prompt('새 폴더 이름을 입력하세요', currentName);
 		if (!newName || newName === currentName) return;
 
-		fetch('/api/farm/folders/' + folderId + '.do', {
+		fetch('/api/farm/folders/' + folderId + '', {
 			method: 'PUT',
 			credentials: 'include',
 			headers: { 'Content-Type': 'application/json' },
@@ -656,7 +656,7 @@ $(document).ready(function() {
 		}
 
 		if (confirm('폴더를 삭제하시겠습니까?')) {
-			fetch('/api/farm/folders/' + folderId + '.do', {
+			fetch('/api/farm/folders/' + folderId + '', {
 				method: 'DELETE',
 				credentials: 'include'
 			})
@@ -744,7 +744,7 @@ function loadFolderList() {
 		console.warn('세션 userId가 없습니다.');
 		return;
 	}
-	const url = '/api/farm/folders.do';
+	const url = '/api/farm/folders';
 	fetch(url, {
 		method: 'GET',
 		credentials: 'include',
@@ -814,7 +814,7 @@ function saveFarmland() {
 	}
 
 
-	fetch('/api/farm/farms.do', {
+	fetch('/api/farm/farms', {
 		method: 'POST',
 		credentials: 'include',
 		headers: {
@@ -916,7 +916,7 @@ function initMap() {
 		visible: false,
 		minZoom: 17,  // 줌 레벨 17 이상에서만 표시
 		source: new ol.source.TileWMS({
-			url: "gis/farm.do",  // 프록시 URL로 변경
+			url: "gis/farm",  // 프록시 URL로 변경
 			params: {
 				'FORMAT': 'image/png',
 				'TRANSPARENT': 'true',
@@ -1289,7 +1289,7 @@ function initMap() {
 		visible: false,
 		minZoom: 17,  // 줌 레벨 17 이상에서만 표시
 		source: new ol.source.TileWMS({
-			url: "gis/pnu.do",
+			url: "gis/pnu",
 			params: {
 				'service': 'WMS',
 				'version': '1.3.0',
@@ -1361,7 +1361,7 @@ function initMap() {
 
 			const [lon, lat] = evt.coordinate;
 
-			fetch("/gis/pnufeat.do", {
+			fetch("/gis/pnufeat", {
 				method: "POST",
 				headers: { "Content-Type": "application/x-www-form-urlencoded" },
 				body: `x=${lon}&y=${lat}`
@@ -1422,7 +1422,7 @@ function initMap() {
 				return;
 			}
 
-			fetch("/gis/farmfeat.do", {
+			fetch("/gis/farmfeat", {
 				method: "POST",
 				headers: { "Content-Type": "application/x-www-form-urlencoded" },
 				body: `x=${lon}&y=${lat}`
@@ -1492,7 +1492,7 @@ function initMap() {
 		if (!cadWfsClick) return;
 
 		if (zoom >= 17) {
-			fetch("/gis/pnufeat.do", {
+			fetch("/gis/pnufeat", {
 				method: "POST",
 				headers: { "Content-Type": "application/x-www-form-urlencoded" },
 				body: `x=${lon}&y=${lat}`
@@ -2022,7 +2022,7 @@ function initMap() {
 			return;
 		}
 
-		const url = '/api/farm/folders.do';
+		const url = '/api/farm/folders';
 
 		fetch(url, {
 			method: 'GET',
@@ -2100,7 +2100,7 @@ function initMap() {
 		}
 
 
-		fetch('/api/farm/farms/drawn.do', {
+		fetch('/api/farm/farms/drawn', {
 			method: 'POST',
 			credentials: 'include',
 			headers: {
@@ -2331,7 +2331,7 @@ $(document).ready(function() {
 
 		try {
 			// 주소 검색 (전국단위)
-			const res = await fetch(`/api/farm/search.do?q=${query}`);
+			const res = await fetch(`/api/farm/search?q=${query}`);
 			const data = await res.json();
 
 
@@ -2407,7 +2407,7 @@ $(document).ready(function() {
 		});
 
 		// 농지 필지 조회 함수 호출
-		fetch("/gis/farmfeat.do", {
+		fetch("/gis/farmfeat", {
 			method: "POST",
 			headers: { "Content-Type": "application/x-www-form-urlencoded" },
 			body: `x=${lon}&y=${lat}`
@@ -2517,7 +2517,7 @@ function closeStatsModal() {
 
 // 폴더별 통계 로드
 function loadFolderStats() {
-	fetch('/api/farm/stats/folders.do', {
+	fetch('/api/farm/stats/folders', {
 		method: 'GET',
 		credentials: 'include'
 	})
@@ -2664,7 +2664,7 @@ function loadFolderStatusStats(folderId) {
 
 	const folderIdParam = folderId === '' ? 0 : folderId;
 
-	fetch(`/api/farm/stats/folder/${folderIdParam}/status.do`, {
+	fetch(`/api/farm/stats/folder/${folderIdParam}/status`, {
 		method: 'GET',
 		credentials: 'include'
 	})

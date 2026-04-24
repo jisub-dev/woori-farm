@@ -182,7 +182,7 @@ function initMap(){
 	cadastreLayer = new ol.layer.Tile({
 		visible: false,
 		source: new ol.source.TileWMS({
-			url : "gis/pnu.do",
+			url : "gis/pnu",
 			params : {
 				'service':'WMS',
 				'version':'1.3.0',
@@ -242,7 +242,7 @@ function initMap(){
 
 		const zoom = baseMap.getView().getZoom();
 		if (zoom >= 8) {
-			fetch("/gis/pnufeat.do", {
+			fetch("/gis/pnufeat", {
 				method: "POST",
 				headers: { "Content-Type": "application/x-www-form-urlencoded" },
 				body: `x=${lon}&y=${lat}` // 4326 좌표로 전달
@@ -294,7 +294,7 @@ function initMap(){
 
 		const zoom = baseMap.getView().getZoom();
 		if (zoom >= 8) {
-			fetch("/gis/pnufeat.do", {
+			fetch("/gis/pnufeat", {
 				method: "POST",
 				headers: { "Content-Type": "application/x-www-form-urlencoded" },
 				body: `x=${lon}&y=${lat}` // 4326 좌표로 전달
