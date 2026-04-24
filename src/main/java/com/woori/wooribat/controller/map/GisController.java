@@ -25,7 +25,7 @@ public class GisController {
 	@Autowired
 	private FarmlandService farmlandService;
 
-	@GetMapping("/gis")
+	@GetMapping("/gis.do")
 	public String gismove() {
 		return "mainMap";
 	}

@@ -23,6 +23,16 @@ public class AuthController {
 	@Autowired
 	private GoogleUserService googleUserService;
 
+	// 루트 → 로그인 상태면 메인, 아니면 로그인
+	@GetMapping("/")
+	public String root(HttpSession session) {
+		Boolean isLoggedIn = (Boolean) session.getAttribute("isLoggedIn");
+		if (Boolean.TRUE.equals(isLoggedIn)) {
+			return "redirect:/gis.do";
+		}
+		return "redirect:/login.do";
+	}
+
 	// 로그인 페이지
 	@GetMapping("/login.do")
 	public String login() {
