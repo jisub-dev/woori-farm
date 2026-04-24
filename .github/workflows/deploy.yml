@@ -9,6 +9,10 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      - name: Fix workspace permissions
+        run: |
+          docker run --rm -v "${{ github.workspace }}":/work alpine chown -R $(id -u):$(id -g) /work || true
+
       - uses: actions/checkout@v4
 
       - name: Build WAR
