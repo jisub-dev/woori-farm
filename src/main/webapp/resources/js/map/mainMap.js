@@ -911,39 +911,20 @@ function initMap() {
 		})
 	});
 
-	// 농지 GeoJSON 벡터 레이어
-	const farmSource = new ol.source.Vector();
-	const farmLayer = new ol.layer.Vector({
+	// 농지 WMS 레이어 (GeoServer)
+	const farmLayer = new ol.layer.Tile({
 		visible: false,
 		minZoom: 17,
-		source: farmSource,
-		style: new ol.style.Style({
-			fill: new ol.style.Fill({ color: 'rgba(34, 197, 94, 0.25)' }),
-			stroke: new ol.style.Stroke({ color: '#16a34a', width: 1.5 })
+		source: new ol.source.TileWMS({
+			url: "gis/farm",
+			params: {
+				'FORMAT': 'image/png',
+				'TRANSPARENT': 'true',
+			},
 		})
 	});
 
-	let farmLayerLoading = false;
-	function loadFarmLayer() {
-		if (!farmWmsVisible) return;
-		const zoom = map.getView().getZoom();
-		if (zoom < 17) return;
-
-		const extent = map.getView().calculateExtent(map.getSize());
-		fetch(`/api/farm/layer?minX=${extent[0]}&minY=${extent[1]}&maxX=${extent[2]}&maxY=${extent[3]}`, {
-				headers: { 'X-Requested-With': 'XMLHttpRequest' }
-			})
-			.then(r => r.json())
-			.then(geojson => {
-				const features = new ol.format.GeoJSON().readFeatures(geojson, {
-					dataProjection: 'EPSG:4326',
-					featureProjection: 'EPSG:3857'
-				});
-				farmSource.clear();
-				farmSource.addFeatures(features);
-			})
-			.catch(() => {});
-	}
+	function loadFarmLayer() {}
 
 	// 일반지도 선택시
 	const switchMapGra = document.getElementById("btn_gra");
@@ -1293,10 +1274,6 @@ function initMap() {
 	map.getView().on('change:resolution', () => {
 		refreshHint();
 		refreshWmsHint();
-		loadFarmLayer();
-	});
-	map.on('moveend', () => {
-		loadFarmLayer();
 	});
 
 	refreshHint();

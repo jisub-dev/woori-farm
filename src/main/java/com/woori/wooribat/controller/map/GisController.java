@@ -98,7 +98,7 @@ public class GisController {
 		RestTemplate restTemplate = new RestTemplate();
 
 		URI uri = UriComponentsBuilder
-	            .fromUriString("http://localhost:9090/geoserver/board/wms")
+	            .fromUriString("http://localhost:8085/geoserver/board/wms")
 	            .queryParam("service", "WMS")
 	            .queryParam("version", "1.1.0")
 	            .queryParam("request", "GetMap")
