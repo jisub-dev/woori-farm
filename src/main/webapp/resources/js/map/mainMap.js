@@ -915,7 +915,7 @@ function initMap() {
 	const farmSource = new ol.source.Vector();
 	const farmLayer = new ol.layer.Vector({
 		visible: false,
-		minZoom: 14,
+		minZoom: 17,
 		source: farmSource,
 		style: new ol.style.Style({
 			fill: new ol.style.Fill({ color: 'rgba(34, 197, 94, 0.25)' }),
@@ -927,7 +927,7 @@ function initMap() {
 	function loadFarmLayer() {
 		if (!farmWmsVisible) return;
 		const zoom = map.getView().getZoom();
-		if (zoom < 14) return;
+		if (zoom < 17) return;
 
 		const extent = map.getView().calculateExtent(map.getSize());
 		fetch(`/api/farm/layer?minX=${extent[0]}&minY=${extent[1]}&maxX=${extent[2]}&maxY=${extent[3]}`, {
@@ -1080,7 +1080,7 @@ function initMap() {
 		deactivateOtherGroups('farm');
 		const currentZoom = Math.round(map.getView().getZoom());
 
-		if (!farmWmsVisible && currentZoom < 14) {
+		if (!farmWmsVisible && currentZoom < 17) {
 			farmWmsHintActive = true;
 			showWmsHint('farm', currentZoom);
 			return;
@@ -1242,7 +1242,7 @@ function initMap() {
 
 	// WMS 레이어 힌트 표시 함수
 	function showWmsHint(type, currentZoom) {
-		const minZoom = type === 'cadastre' ? 17 : 14;
+		const minZoom = type === 'cadastre' ? 17 : 17;
 		const layerName = type === 'cadastre' ? '지적편집도' : '농지';
 
 		wmsHintEl.innerHTML = `⚠️ <b>${layerName}</b> 레이어는 <b>줌 레벨 ${minZoom} 이상</b>에서 표시됩니다.<br>현재 줌: ${currentZoom} — 지도를 더 확대해주세요.`;
@@ -1277,9 +1277,9 @@ function initMap() {
 			}
 		}
 
-		// 농지 레이어 힌트 (zoom < 14일 때)
+		// 농지 레이어 힌트 (zoom < 17일 때)
 		if (farmWmsHintActive) {
-			if (z >= 14) {
+			if (z >= 17) {
 				farmWmsHintActive = false;
 				wmsHintEl.style.display = 'none';
 				loadFarmLayer();
