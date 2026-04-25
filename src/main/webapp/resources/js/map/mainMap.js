@@ -930,7 +930,9 @@ function initMap() {
 		if (zoom < 14) return;
 
 		const extent = map.getView().calculateExtent(map.getSize());
-		fetch(`/api/farm/layer?minX=${extent[0]}&minY=${extent[1]}&maxX=${extent[2]}&maxY=${extent[3]}`)
+		fetch(`/api/farm/layer?minX=${extent[0]}&minY=${extent[1]}&maxX=${extent[2]}&maxY=${extent[3]}`, {
+				headers: { 'X-Requested-With': 'XMLHttpRequest' }
+			})
 			.then(r => r.json())
 			.then(geojson => {
 				const features = new ol.format.GeoJSON().readFeatures(geojson, {
