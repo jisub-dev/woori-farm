@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- 흙 -->
+  <ellipse cx="32" cy="54" rx="22" ry="6" fill="#8B6340"/>
+  <!-- 줄기 -->
+  <line x1="32" y1="54" x2="32" y2="32" stroke="#4CAF50" stroke-width="3" stroke-linecap="round"/>
+  <!-- 왼쪽 잎 -->
+  <path d="M32 42 Q18 34 20 20 Q30 26 32 42Z" fill="#66BB6A"/>
+  <!-- 오른쪽 잎 -->
+  <path d="M32 36 Q46 28 44 14 Q34 20 32 36Z" fill="#43A047"/>
+  <!-- 새싹 -->
+  <path d="M32 32 Q28 22 32 14 Q36 22 32 32Z" fill="#81C784"/>
+</svg>

@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>우리밭 로그인</title>
+<link rel="icon" type="image/svg+xml" href="${pageContext.request.contextPath}/resources/favicon.svg">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/style/loginStyle.css">
 </head>
 <body>

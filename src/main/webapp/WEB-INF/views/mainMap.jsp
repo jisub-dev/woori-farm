@@ -7,6 +7,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>우리밭 지도</title>
+	<link rel="icon" type="image/svg+xml" href="${pageContext.request.contextPath}/resources/favicon.svg">
 
 	<!-- OpenLayers CSS & JS -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@7.5.2/ol.css">
