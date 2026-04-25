@@ -1,7 +1,11 @@
 package com.woori.wooribat.controller.map;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,8 +15,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.woori.wooribat.model.dto.map.FarmlandDto;
+import com.woori.wooribat.service.map.FarmlandService;
+
 @Controller
 public class GisController {
+
+	@Autowired
+	private FarmlandService farmlandService;
 
 	@GetMapping("/gis")
 	public String gismove() {
@@ -85,7 +96,7 @@ public class GisController {
 		RestTemplate restTemplate = new RestTemplate();
 
 		URI uri = UriComponentsBuilder
-	            .fromUriString("http://localhost:8085/geoserver/board/wms")
+	            .fromUriString("http://geoserver:8080/geoserver/board/wms")
 	            .queryParam("service", "WMS")
 	            .queryParam("version", "1.1.0")
 	            .queryParam("request", "GetMap")
