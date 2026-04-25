@@ -911,18 +911,37 @@ function initMap() {
 		})
 	});
 
-	// 농지 WMS 레이어
-	const farmLayer = new ol.layer.Tile({
+	// 농지 GeoJSON 벡터 레이어
+	const farmSource = new ol.source.Vector();
+	const farmLayer = new ol.layer.Vector({
 		visible: false,
-		minZoom: 17,  // 줌 레벨 17 이상에서만 표시
-		source: new ol.source.TileWMS({
-			url: "gis/farm",  // 프록시 URL로 변경
-			params: {
-				'FORMAT': 'image/png',
-				'TRANSPARENT': 'true',
-			},
+		minZoom: 14,
+		source: farmSource,
+		style: new ol.style.Style({
+			fill: new ol.style.Fill({ color: 'rgba(34, 197, 94, 0.25)' }),
+			stroke: new ol.style.Stroke({ color: '#16a34a', width: 1.5 })
 		})
 	});
+
+	let farmLayerLoading = false;
+	function loadFarmLayer() {
+		if (!farmWmsVisible) return;
+		const zoom = map.getView().getZoom();
+		if (zoom < 14) return;
+
+		const extent = map.getView().calculateExtent(map.getSize());
+		fetch(`/api/farm/layer?minX=${extent[0]}&minY=${extent[1]}&maxX=${extent[2]}&maxY=${extent[3]}`)
+			.then(r => r.json())
+			.then(geojson => {
+				const features = new ol.format.GeoJSON().readFeatures(geojson, {
+					dataProjection: 'EPSG:4326',
+					featureProjection: 'EPSG:3857'
+				});
+				farmSource.clear();
+				farmSource.addFeatures(features);
+			})
+			.catch(() => {});
+	}
 
 	// 일반지도 선택시
 	const switchMapGra = document.getElementById("btn_gra");
@@ -1058,25 +1077,21 @@ function initMap() {
 	addFarmWMS.addEventListener("click", () => {
 		deactivateOtherGroups('farm');
 		const currentZoom = Math.round(map.getView().getZoom());
-		/*
-				if (!farmWmsVisible && currentZoom < 17) {
-					// 켜려고 하는데 줌 레벨이 부족한 경우 - 힌트 표시
-					refreshHint();
-					farmWmsHintActive = true;
-					showWmsHint('farm', currentZoom);
-					return;
-				}*/
 
-		// 줌 레벨이 충분하면 토글
+		if (!farmWmsVisible && currentZoom < 14) {
+			farmWmsHintActive = true;
+			showWmsHint('farm', currentZoom);
+			return;
+		}
+
 		farmWmsVisible = !farmWmsVisible;
 		addFarmWMS.setAttribute('aria-pressed', farmWmsVisible);
 
 		if (farmWmsVisible) {
-			// ON: 농지 레이어 표시
-			refreshHint();
 			farmLayer.setVisible(true);
 			farmWmsHintActive = false;
 			wmsHintEl.style.display = 'none';
+			loadFarmLayer();
 		} else {
 			// OFF: 농지 레이어 숨김
 			refreshHint();
@@ -1225,12 +1240,10 @@ function initMap() {
 
 	// WMS 레이어 힌트 표시 함수
 	function showWmsHint(type, currentZoom) {
-		const minZoom = type === 'cadastre' ? 17 : 17;
+		const minZoom = type === 'cadastre' ? 17 : 14;
 		const layerName = type === 'cadastre' ? '지적편집도' : '농지';
 
-		wmsHintEl.innerHTML = `
-			
-		`;
+		wmsHintEl.innerHTML = `⚠️ <b>${layerName}</b> 레이어는 <b>줌 레벨 ${minZoom} 이상</b>에서 표시됩니다.<br>현재 줌: ${currentZoom} — 지도를 더 확대해주세요.`;
 		wmsHintEl.style.display = 'block';
 	}
 
@@ -1262,22 +1275,26 @@ function initMap() {
 			}
 		}
 
-		// 농지 WMS 힌트가 활성화 상태면 업데이트
+		// 농지 레이어 힌트 (zoom < 14일 때)
 		if (farmWmsHintActive) {
-			if (z >= 17) {
-				// 충분한 줌 레벨에 도달하면 힌트 숨김
+			if (z >= 14) {
 				farmWmsHintActive = false;
 				wmsHintEl.style.display = 'none';
+				loadFarmLayer();
 			} else {
 				showWmsHint('farm', z);
 			}
 		}
 	}
 
-	// 줌 레벨 변경 감지
+	// 줌/이동 시 농지 레이어 갱신
 	map.getView().on('change:resolution', () => {
-		refreshHint(); // 지적편집도 클릭 힌트
-		refreshWmsHint(); // WMS 레이어 힌트
+		refreshHint();
+		refreshWmsHint();
+		loadFarmLayer();
+	});
+	map.on('moveend', () => {
+		loadFarmLayer();
 	});
 
 	refreshHint();

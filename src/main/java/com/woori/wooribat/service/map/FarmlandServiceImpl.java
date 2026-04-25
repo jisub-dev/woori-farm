@@ -1,5 +1,7 @@
 package com.woori.wooribat.service.map;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,5 +20,11 @@ public class FarmlandServiceImpl implements FarmlandService {
 	@Transactional(readOnly = true)
 	public FarmlandDto getFarmlandByPoint(double x, double y) {
 		return farmlandMapper.selectFarmlandByPoint(x, y);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<FarmlandDto> getFarmlandByBbox(double minX, double minY, double maxX, double maxY) {
+		return farmlandMapper.selectFarmlandByBbox(minX, minY, maxX, maxY);
 	}
 }

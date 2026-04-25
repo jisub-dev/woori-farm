@@ -26,4 +26,23 @@
 		LIMIT 1
 	</select>
 
+
+	<!-- 뷰포트 BBOX 내 농지 GeoJSON 조회 (최대 2000건) -->
+	<select id="selectFarmlandByBbox" resultType="com.woori.wooribat.model.dto.map.FarmlandDto">
+		SELECT
+			id,
+			pnu,
+			land_cd AS landCd,
+			land_cd_nm AS landCdNm,
+			stdg_addr AS stdgAddr,
+			fl_ar AS flAr,
+			ST_AsGeoJSON(ST_Transform(geom, 4326)) AS geomGeoJson
+		FROM farm.farmland_master
+		WHERE ST_Intersects(
+			geom,
+			ST_MakeEnvelope(#{minX}, #{minY}, #{maxX}, #{maxY}, 3857)
+		)
+		LIMIT 2000
+	</select>
+
 </mapper>

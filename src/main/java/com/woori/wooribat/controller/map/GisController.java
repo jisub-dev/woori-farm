@@ -1,8 +1,10 @@
 package com.woori.wooribat.controller.map;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,5 +172,43 @@ public class GisController {
 
 		return result;
 	}
-	
+
+	@ResponseBody
+	@GetMapping(value = "/api/farm/layer", produces = "application/json; charset=UTF-8")
+	public Map<String, Object> getFarmlandLayer(
+			@RequestParam("minX") double minX,
+			@RequestParam("minY") double minY,
+			@RequestParam("maxX") double maxX,
+			@RequestParam("maxY") double maxY) {
+
+		Map<String, Object> featureCollection = new HashMap<>();
+		featureCollection.put("type", "FeatureCollection");
+
+		try {
+			List<FarmlandDto> list = farmlandService.getFarmlandByBbox(minX, minY, maxX, maxY);
+			ObjectMapper objectMapper = new ObjectMapper();
+			List<Map<String, Object>> features = new ArrayList<>();
+
+			for (FarmlandDto dto : list) {
+				Map<String, Object> props = new HashMap<>();
+				props.put("id", dto.getId());
+				props.put("pnu", dto.getPnu());
+				props.put("landCdNm", dto.getLandCdNm());
+				props.put("stdgAddr", dto.getStdgAddr());
+				props.put("flAr", dto.getFlAr());
+
+				Map<String, Object> feature = new HashMap<>();
+				feature.put("type", "Feature");
+				feature.put("properties", props);
+				feature.put("geometry", objectMapper.readValue(dto.getGeomGeoJson(), Map.class));
+				features.add(feature);
+			}
+			featureCollection.put("features", features);
+		} catch (Exception e) {
+			featureCollection.put("features", Collections.emptyList());
+		}
+
+		return featureCollection;
+	}
+
 }
