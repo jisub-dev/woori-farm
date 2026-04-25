@@ -9,8 +9,8 @@
 	<title>우리밭 지도</title>
 
 	<!-- OpenLayers CSS & JS -->
-	<link rel="stylesheet" href="<c:url value='/resources/js/ol/ol.css'/>">
-	<script type="text/javascript" src="<c:url value='/resources/js/ol/dist/ol.js'/>"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@7.5.2/ol.css">
+	<script src="https://cdn.jsdelivr.net/npm/ol@7.5.2/dist/ol.js"></script>
 	<script type="text/javascript" src="<c:url value='/resources/js/jquery-3.1.1.min.js'/>"></script>
 
 	<!-- Chart.js -->
