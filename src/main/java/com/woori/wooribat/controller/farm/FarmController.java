@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,17 +18,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.woori.wooribat.model.dto.farm.FarmDto;
 import com.woori.wooribat.model.dto.farm.FarmFolderDto;
-import com.woori.wooribat.model.dto.map.FarmlandDto;
 import com.woori.wooribat.service.farm.FarmService;
-import com.woori.wooribat.service.map.FarmlandService;
 
 @Controller
 @RequestMapping("/api/farm")
@@ -37,9 +32,6 @@ public class FarmController {
 
 	@Autowired
 	private FarmService farmService;
-
-	@Autowired
-	private FarmlandService farmlandService;
 
 	// 폴더 목록
 	@GetMapping("/folders")
@@ -438,43 +430,5 @@ public class FarmController {
 		}
 	}
 
-	// 뷰포트 BBOX 내 농지 GeoJSON 레이어
-	@GetMapping("/layer")
-	@ResponseBody
-	public Map<String, Object> getFarmlandLayer(
-			@RequestParam("minX") double minX,
-			@RequestParam("minY") double minY,
-			@RequestParam("maxX") double maxX,
-			@RequestParam("maxY") double maxY) {
-
-		Map<String, Object> featureCollection = new HashMap<>();
-		featureCollection.put("type", "FeatureCollection");
-
-		try {
-			List<FarmlandDto> list = farmlandService.getFarmlandByBbox(minX, minY, maxX, maxY);
-			ObjectMapper objectMapper = new ObjectMapper();
-			List<Map<String, Object>> features = new java.util.ArrayList<>();
-
-			for (FarmlandDto dto : list) {
-				Map<String, Object> props = new HashMap<>();
-				props.put("id", dto.getId());
-				props.put("pnu", dto.getPnu());
-				props.put("landCdNm", dto.getLandCdNm());
-				props.put("stdgAddr", dto.getStdgAddr());
-				props.put("flAr", dto.getFlAr());
-
-				Map<String, Object> feature = new HashMap<>();
-				feature.put("type", "Feature");
-				feature.put("properties", props);
-				feature.put("geometry", objectMapper.readValue(dto.getGeomGeoJson(), Map.class));
-				features.add(feature);
-			}
-			featureCollection.put("features", features);
-		} catch (Exception e) {
-			featureCollection.put("features", java.util.Collections.emptyList());
-		}
-
-		return featureCollection;
-	}
 }
 
