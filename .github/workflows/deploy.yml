@@ -15,6 +15,12 @@ jobs:
 
       - uses: actions/checkout@v4
 
+      - name: Inject oauth.properties
+        run: |
+          cat > ${{ github.workspace }}/src/main/resources/oauth.properties << 'EOF'
+          ${{ secrets.OAUTH_PROPERTIES }}
+          EOF
+
       - name: Build WAR
         run: |
           mkdir -p /home/dev/.m2
